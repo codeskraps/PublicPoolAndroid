@@ -59,4 +59,9 @@
     <string name="dashboard_chart_series_10min">10 Minute</string>
     <string name="dashboard_chart_series_2hour">2 Hour</string>
 
+    <!-- Dialog Content -->
+    <string name="difficulty_explanation">If you find a solution with a difficulty higher than the network difficulty, you\'ve found a block</string>
+    <string name="action_close">Close</string>
+    <string name="info_icon_description">Information</string>
+
 </resources>

@@ -1,6 +1,5 @@
 package com.codeskraps.publicpool
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
@@ -8,17 +7,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.CurrentScreen
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
@@ -32,7 +34,6 @@ import org.koin.android.ext.android.inject
 class MainActivity : ComponentActivity() {
     val appReadinessState: AppReadinessState by inject()
 
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -42,17 +43,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             PublicPoolTheme {
-                TabNavigator(DashboardTab) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Box(modifier = Modifier.weight(1f)) {
-                            CurrentScreen()
-                        }
-                        NavigationBar {
-                            TabNavigationItem(tab = DashboardTab)
-                            TabNavigationItem(tab = WorkersTab)
-                            TabNavigationItem(tab = WalletTab)
-                        }
-                    }
+                // Use Navigator as the ROOT container for ALL screens (including settings)
+                Navigator(HomeScreen()) {
+                    // Show the current screen
+                    CurrentScreen()
                 }
             }
         }
@@ -75,18 +69,47 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-private fun RowScope.TabNavigationItem(tab: Tab) {
-    val tabNavigator = LocalTabNavigator.current
-
-    NavigationBarItem(
-        selected = tabNavigator.current == tab,
-        onClick = { tabNavigator.current = tab },
-        icon = {
-            tab.options.icon?.let {
-                Icon(painter = it, contentDescription = tab.options.title)
+/**
+ * Main home screen that contains the tabs
+ */
+class HomeScreen : Screen {
+    @Composable
+    override fun Content() {
+        TabNavigator(DashboardTab) { tabNavigator ->
+            Scaffold(
+                bottomBar = {
+                    NavigationBar {
+                        TabNavigationItem(DashboardTab)
+                        TabNavigationItem(WorkersTab)
+                        TabNavigationItem(WalletTab)
+                    }
+                }
+            ) { innerPadding ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                ) {
+                    // Show the current tab content
+                    tabNavigator.current.Content()
+                }
             }
-        },
-        label = { Text(text = tab.options.title) }
-    )
+        }
+    }
+
+    @Composable
+    private fun RowScope.TabNavigationItem(tab: Tab) {
+        val tabNavigator = LocalTabNavigator.current
+
+        NavigationBarItem(
+            selected = tabNavigator.current == tab,
+            onClick = { tabNavigator.current = tab },
+            icon = {
+                tab.options.icon?.let {
+                    Icon(painter = it, contentDescription = tab.options.title)
+                }
+            },
+            label = { Text(text = tab.options.title) }
+        )
+    }
 }

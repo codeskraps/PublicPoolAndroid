@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +44,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import cafe.adriel.voyager.core.screen.Screen
 import com.anychart.APIlib
 import com.anychart.AnyChart
 import com.anychart.AnyChartView
@@ -62,11 +66,18 @@ import com.codeskraps.publicpool.util.formatLargeNumber
 import kotlinx.coroutines.flow.collectLatest
 import java.text.NumberFormat
 import java.util.Locale
+import com.codeskraps.publicpool.presentation.navigation.getParentOrSelf
+import androidx.compose.foundation.clickable
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.TextButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardContent(screenModel: DashboardScreenModel) {
     val state by screenModel.state.collectAsState()
+    
+    // Get the current navigator, which might be inside a tab
     val navigator = LocalNavigator.currentOrThrow
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -74,7 +85,11 @@ fun DashboardContent(screenModel: DashboardScreenModel) {
     LaunchedEffect(key1 = screenModel.effect) {
         screenModel.effect.collectLatest { effect ->
             when (effect) {
-                DashboardEffect.NavigateToSettings -> navigator.push(SettingsScreen)
+                DashboardEffect.NavigateToSettings -> {
+                    // Get the parent/root navigator and push SettingsScreen to it
+                    // This ensures we exit tab navigation when going to settings
+                    navigator.getParentOrSelf().push(SettingsScreen)
+                }
                 is DashboardEffect.ShowErrorSnackbar -> {
                     snackbarHostState.showSnackbar(
                         message = effect.message,
@@ -117,7 +132,7 @@ fun DashboardContent(screenModel: DashboardScreenModel) {
             Spacer(modifier = Modifier.height(16.dp))
 
             // Show message if no wallet address is set
-            if (!state.isWalletLoading && state.walletAddress.isNullOrBlank()) {
+            if (!state.isWalletLoading && (state.walletAddress?.isBlank() != false)) {
                 AppCard(modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)) {
                     Text(
                         text = stringResource(R.string.dashboard_info_set_wallet),
@@ -154,7 +169,8 @@ fun TopInfoCards(state: DashboardState) {
             value = state.clientInfo?.bestDifficulty?.toDoubleOrNull()?.let { formatLargeNumber(it) } ?: state.clientInfo?.bestDifficulty ?: stringResource(R.string.text_placeholder_dash),
             secondaryValue = state.clientInfo?.bestDifficulty?.toDoubleOrNull()?.let { numberFormat.format(it) },
             isLoading = state.isClientInfoLoading,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            showInfoIcon = true
         )
         Spacer(modifier = Modifier.width(8.dp))
         InfoCard(
@@ -190,18 +206,53 @@ fun InfoCard(
     value: String,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
-    secondaryValue: String? = null
+    secondaryValue: String? = null,
+    showInfoIcon: Boolean = false
 ) {
+    val showDialog = remember { mutableStateOf(false) }
+    
+    if (showDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showDialog.value = false },
+            title = null,
+            text = { Text(text = stringResource(R.string.difficulty_explanation)) },
+            confirmButton = { 
+                TextButton(onClick = { showDialog.value = false }) {
+                    Text(stringResource(R.string.action_close))
+                }
+            }
+        )
+    }
+    
     AppCard(modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                 // Ensure consistent height regardless of secondary text
-                .defaultMinSize(minHeight = 90.dp) // Adjusted minHeight slightly
+                .defaultMinSize(minHeight = 90.dp)
                 .padding(12.dp),
              verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = label, 
+                    style = MaterialTheme.typography.labelMedium, 
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                if (showInfoIcon) {
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = stringResource(R.string.info_icon_description),
+                        modifier = Modifier
+                            .size(16.dp)
+                            .clickable { showDialog.value = true },
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+            
             Box(modifier = Modifier.align(Alignment.End)) {
                 if (isLoading) {
                     CircularProgressIndicator(modifier = Modifier.size(20.dp))
@@ -211,13 +262,12 @@ fun InfoCard(
                             text = value,
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface // Explicitly white
+                            color = MaterialTheme.colorScheme.onSurface
                         )
-                        // Render secondary text OR an empty text with same style for spacing
                         Text(
-                            text = secondaryValue ?: "", // Display secondary value or empty string
-                            style = MaterialTheme.typography.bodySmall, // Apply same style
-                            color = if (secondaryValue != null) PositiveGreen else Color.Transparent // Use green or make invisible
+                            text = secondaryValue ?: "",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = if (secondaryValue != null) PositiveGreen else Color.Transparent
                         )
                     }
                 }
@@ -367,6 +417,9 @@ fun HashRateChart(
             cartesian.legend().fontColor(onSurfaceVariantColorHex) // Set legend text color
             cartesian.legend().fontSize(13.0)
             cartesian.legend().padding(0.0, 0.0, 10.0, 0.0)
+
+            // Remove "AnyChart Trial Version" watermark
+            view.setLicenceKey("your-organization-name,com.codeskraps.publicpool-1,ORwODQEtD24EL24OTwlwBGELBQ==")
 
             view.setChart(cartesian)
         }

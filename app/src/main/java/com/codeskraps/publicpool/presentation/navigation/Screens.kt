@@ -5,20 +5,19 @@ import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
-import cafe.adriel.voyager.koin.koinScreenModel // Import the new function
+import cafe.adriel.voyager.koin.koinScreenModel
+import com.codeskraps.publicpool.presentation.dashboard.DashboardContent
 import com.codeskraps.publicpool.presentation.dashboard.DashboardScreenModel
-import com.codeskraps.publicpool.presentation.dashboard.DashboardContent // We'll create this Composable
+import com.codeskraps.publicpool.presentation.settings.SettingsContent
 import com.codeskraps.publicpool.presentation.settings.SettingsScreenModel
-import com.codeskraps.publicpool.presentation.settings.SettingsContent // We'll create this Composable
 import kotlinx.parcelize.IgnoredOnParcel
-import kotlinx.parcelize.Parcelize // Required for Screen serialization if needed
+import kotlinx.parcelize.Parcelize
 
-// Using Parcelize allows Screens to be potentially passed in bundles, though not strictly necessary
-// for basic navigation if you reconstruct them.
-
+/**
+ * DashboardScreen - Renders the dashboard content with its screen model
+ */
 @Parcelize
 data object DashboardScreen : Screen, Parcelable {
-    // Optional: Define a unique key if needed for specific navigator operations
     @IgnoredOnParcel
     override val key: ScreenKey = uniqueScreenKey
 
@@ -26,12 +25,14 @@ data object DashboardScreen : Screen, Parcelable {
 
     @Composable
     override fun Content() {
-        // Use koinScreenModel from voyager-koin
         val screenModel: DashboardScreenModel = koinScreenModel()
-        DashboardContent(screenModel) // Pass ScreenModel to the actual UI content
+        DashboardContent(screenModel)
     }
 }
 
+/**
+ * SettingsScreen - Renders the settings content with its screen model
+ */
 @Parcelize
 data object SettingsScreen : Screen, Parcelable {
     @IgnoredOnParcel

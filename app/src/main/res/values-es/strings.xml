@@ -58,4 +58,9 @@
     <string name="dashboard_chart_set_wallet">Configure la dirección de la billetera para ver el gráfico.</string>
     <string name="dashboard_chart_series_10min">10 minutos</string>
     <string name="dashboard_chart_series_2hour">2 horas</string>
+
+    <!-- Dialog Content -->
+    <string name="difficulty_explanation">Si encuentras una solución con una dificultad mayor que la dificultad de la red, has encontrado un bloque</string>
+    <string name="action_close">Cerrar</string>
+    <string name="info_icon_description">Información</string>
 </resources>

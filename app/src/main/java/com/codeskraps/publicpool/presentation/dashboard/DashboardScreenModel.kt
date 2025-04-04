@@ -115,10 +115,10 @@ class DashboardScreenModel(
                 it.copy(
                     isClientInfoLoading = true,
                     isChartDataLoading = true,
-                    // Consider clearing previous data on refresh if desired
-                    // clientInfo = if (isRefresh) it.clientInfo else null,
-                    // chartData = if (isRefresh) it.chartData else emptyList(),
-                    // chartDataTwoHourAvg = if (isRefresh) it.chartDataTwoHourAvg else emptyList()
+                    // Clear previous data when refreshing with a new address
+                    clientInfo = null,
+                    chartData = emptyList(),
+                    chartDataTwoHourAvg = emptyList()
                 )
             }
 

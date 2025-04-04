@@ -47,6 +47,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.codeskraps.publicpool.R
 import com.codeskraps.publicpool.domain.model.Worker
+import com.codeskraps.publicpool.presentation.common.AppCard
 import com.codeskraps.publicpool.util.calculateUptime
 import com.codeskraps.publicpool.util.formatDifficulty
 import com.codeskraps.publicpool.util.formatHashRate
@@ -142,9 +143,9 @@ fun WorkerGroupCard(workerName: String, sessions: List<Worker>) {
     val totalHashRate = sessions.sumOf { it.hashRate ?: 0.0 }
     val groupBestDifficulty = sessions.mapNotNull { it.bestDifficulty }.maxOrNull()
 
-    Card(
+    AppCard(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = 2.dp
     ) {
         Column(
             modifier = Modifier
@@ -174,12 +175,18 @@ fun WorkerGroupCard(workerName: String, sessions: List<Worker>) {
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
                         stringResource(R.string.workers_label_session_count, sessions.size),
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    Text(formatHashRate(totalHashRate), style = MaterialTheme.typography.bodySmall)
+                    Text(
+                        formatHashRate(totalHashRate), 
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                     Text(
                         formatDifficulty(groupBestDifficulty),
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -192,31 +199,36 @@ fun WorkerGroupCard(workerName: String, sessions: List<Worker>) {
                     Text(
                         stringResource(R.string.workers_header_session_id),
                         modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.labelSmall
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         stringResource(R.string.workers_header_hash_rate),
                         modifier = Modifier.weight(1f),
                         style = MaterialTheme.typography.labelSmall,
-                        textAlign = TextAlign.End
+                        textAlign = TextAlign.End,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         stringResource(R.string.workers_header_difficulty),
                         modifier = Modifier.weight(1f),
                         style = MaterialTheme.typography.labelSmall,
-                        textAlign = TextAlign.End
+                        textAlign = TextAlign.End,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         stringResource(R.string.workers_header_uptime),
                         modifier = Modifier.weight(1f),
                         style = MaterialTheme.typography.labelSmall,
-                        textAlign = TextAlign.End
+                        textAlign = TextAlign.End,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         stringResource(R.string.workers_header_last_seen),
                         modifier = Modifier.weight(1f),
                         style = MaterialTheme.typography.labelSmall,
-                        textAlign = TextAlign.End
+                        textAlign = TextAlign.End,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 sessions.forEach { session ->

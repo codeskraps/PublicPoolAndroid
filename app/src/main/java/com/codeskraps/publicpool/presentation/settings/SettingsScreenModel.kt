@@ -55,8 +55,9 @@ class SettingsScreenModel(
     private fun saveWalletAddress() {
         screenModelScope.launch {
             try {
-                // Use the current address from the state
-                saveWalletAddressUseCase(mutableState.value.walletAddress)
+                // Use the current address from the state, explicitly allowing blank addresses
+                val addressToSave = mutableState.value.walletAddress
+                saveWalletAddressUseCase(addressToSave)
                 _effect.send(SettingsEffect.WalletAddressSaved)
             } catch (e: Exception) {
                 // Handle error saving address

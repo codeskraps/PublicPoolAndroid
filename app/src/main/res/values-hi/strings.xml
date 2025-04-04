@@ -58,4 +58,9 @@
     <string name="dashboard_chart_set_wallet">चार्ट देखने के लिए वॉलेट पता सेट करें।</string>
     <string name="dashboard_chart_series_10min">10 मिनट</string>
     <string name="dashboard_chart_series_2hour">2 घंटे</string>
+
+    <!-- Dialog Content -->
+    <string name="difficulty_explanation">यदि आप नेटवर्क कठिनाई से अधिक कठिनाई वाला समाधान पाते हैं, तो आपने एक ब्लॉक पाया है</string>
+    <string name="action_close">बंद करें</string>
+    <string name="info_icon_description">जानकारी</string>
 </resources>

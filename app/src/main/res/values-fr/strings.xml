@@ -55,7 +55,12 @@
     <string name="dashboard_card_secondary_block_weight_prefix">Poids:</string>
     <string name="dashboard_chart_title">Historique du taux de hachage</string>
     <string name="dashboard_chart_no_data">Aucune donnée de graphique disponible pour ce portefeuille.</string>
-    <string name="dashboard_chart_set_wallet">Définissez l'adresse du portefeuille pour voir le graphique.</string>
+    <string name="dashboard_chart_set_wallet">Définissez l\'adresse du portefeuille pour voir le graphique.</string>
     <string name="dashboard_chart_series_10min">10 minutes</string>
     <string name="dashboard_chart_series_2hour">2 heures</string>
+
+    <!-- Dialog Content -->
+    <string name="difficulty_explanation">Si vous trouvez une solution avec une difficulté plus élevée que la difficulté du réseau, vous avez trouvé un bloc</string>
+    <string name="action_close">Fermer</string>
+    <string name="info_icon_description">Information</string>
 </resources>

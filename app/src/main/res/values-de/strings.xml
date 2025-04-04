@@ -58,4 +58,9 @@
     <string name="dashboard_chart_set_wallet">Legen Sie die Wallet-Adresse fest, um das Diagramm anzuzeigen.</string>
     <string name="dashboard_chart_series_10min">10 Minuten</string>
     <string name="dashboard_chart_series_2hour">2 Stunden</string>
+
+    <!-- Dialog Content -->
+    <string name="difficulty_explanation">Wenn Sie eine Lösung mit einer Schwierigkeit finden, die höher ist als die Netzwerk-Schwierigkeit, haben Sie einen Block gefunden</string>
+    <string name="action_close">Schließen</string>
+    <string name="info_icon_description">Information</string>
 </resources>

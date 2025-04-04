@@ -58,4 +58,9 @@
     <string name="dashboard_chart_set_wallet">设置钱包地址以查看图表。</string>
     <string name="dashboard_chart_series_10min">10 分钟</string>
     <string name="dashboard_chart_series_2hour">2 小时</string>
+
+    <!-- Dialog Content -->
+    <string name="difficulty_explanation">如果您找到了难度高于网络难度的解决方案，那么您已经找到了一个区块</string>
+    <string name="action_close">关闭</string>
+    <string name="info_icon_description">信息</string>
 </resources>
