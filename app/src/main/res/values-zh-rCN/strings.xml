@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">PublicPool</string>
+
+    <!-- Tab Titles -->
+    <string name="tab_title_dashboard">仪表盘</string>
+    <string name="tab_title_workers">矿工</string>
+    <string name="tab_title_wallet">钱包</string>
+
+    <!-- General -->
+    <string name="error_unknown">未知错误</string>
+    <string name="text_placeholder_dash">-</string>
+    <string name="currency_usd">美元</string>
+    <string name="action_back">返回</string>
+
+    <!-- Settings Screen -->
+    <string name="screen_title_settings">设置</string>
+    <string name="settings_label_wallet_address">比特币钱包地址</string>
+    <string name="settings_button_save">保存</string>
+    <string name="settings_toast_wallet_saved">钱包地址已保存</string>
+
+    <!-- Wallet Screen -->
+    <string name="screen_title_wallet_details">钱包详情</string>
+    <string name="wallet_error_not_set">未设置钱包地址。请在设置中配置。</string>
+    <string name="wallet_error_load_failed">无法加载钱包信息。</string>
+    <string name="wallet_label_current_btc_price">当前比特币价格</string>
+    <string name="wallet_label_final_balance">最终余额</string>
+    <string name="wallet_label_total_received">总接收</string>
+    <string name="wallet_label_total_sent">总发送</string>
+    <string name="wallet_header_recent_transactions_count">近期交易 (%d)</string>
+    <string name="wallet_clipboard_label">钱包地址</string>
+    <string name="wallet_toast_address_copied">地址已复制到剪贴板</string>
+    <string name="wallet_balance_fiat_prefix">≈</string>
+
+    <!-- Workers Screen -->
+    <string name="screen_title_workers">矿工</string>
+    <string name="workers_no_wallet">请在设置中设置您的钱包地址以查看矿工详细信息。</string>
+    <string name="workers_no_data">未找到此钱包地址的活动矿工。</string>
+    <string name="content_description_expand">展开矿工详情</string>
+    <string name="content_description_collapse">折叠矿工详情</string>
+    <string name="workers_header_session_id">会话 ID</string>
+    <string name="workers_header_hash_rate">哈希率</string>
+    <string name="workers_header_difficulty">难度</string>
+    <string name="workers_header_uptime">运行时间</string>
+    <string name="workers_header_last_seen">最后在线</string>
+    <string name="workers_label_session_count">%d 个会话</string>
+
+    <!-- Dashboard Screen -->
+    <string name="screen_title_dashboard">公共矿池</string>
+    <string name="dashboard_action_settings">设置</string>
+    <string name="dashboard_info_set_wallet">请在设置中设置您的比特币钱包地址以查看您的统计数据。</string>
+    <string name="dashboard_card_label_your_best_difficulty">您的最佳难度</string>
+    <string name="dashboard_card_label_network_difficulty">网络难度</string>
+    <string name="dashboard_card_label_network_hash_rate">网络哈希率</string>
+    <string name="dashboard_card_label_block_height">区块高度</string>
+    <string name="dashboard_card_secondary_block_weight_prefix">权重：</string>
+    <string name="dashboard_chart_title">哈希率历史记录</string>
+    <string name="dashboard_chart_no_data">此钱包没有可用的图表数据。</string>
+    <string name="dashboard_chart_set_wallet">设置钱包地址以查看图表。</string>
+    <string name="dashboard_chart_series_10min">10 分钟</string>
+    <string name="dashboard_chart_series_2hour">2 小时</string>
+</resources>

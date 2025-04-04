@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">PublicPool</string>
+
+    <!-- Tab Titles -->
+    <string name="tab_title_dashboard">Dashboard</string>
+    <string name="tab_title_workers">Arbeiter</string>
+    <string name="tab_title_wallet">Wallet</string>
+
+    <!-- General -->
+    <string name="error_unknown">Unbekannter Fehler</string>
+    <string name="text_placeholder_dash">-</string>
+    <string name="currency_usd">USD</string>
+    <string name="action_back">Zurück</string>
+
+    <!-- Settings Screen -->
+    <string name="screen_title_settings">Einstellungen</string>
+    <string name="settings_label_wallet_address">Bitcoin-Wallet-Adresse</string>
+    <string name="settings_button_save">Speichern</string>
+    <string name="settings_toast_wallet_saved">Wallet-Adresse gespeichert</string>
+
+    <!-- Wallet Screen -->
+    <string name="screen_title_wallet_details">Wallet-Details</string>
+    <string name="wallet_error_not_set">Wallet-Adresse nicht festgelegt. Bitte konfigurieren Sie sie in den Einstellungen.</string>
+    <string name="wallet_error_load_failed">Wallet-Informationen konnten nicht geladen werden.</string>
+    <string name="wallet_label_current_btc_price">Aktueller BTC-Preis</string>
+    <string name="wallet_label_final_balance">Endsaldo</string>
+    <string name="wallet_label_total_received">Gesamt empfangen</string>
+    <string name="wallet_label_total_sent">Gesamt gesendet</string>
+    <string name="wallet_header_recent_transactions_count">Letzte Transaktionen (%d)</string>
+    <string name="wallet_clipboard_label">Wallet-Adresse</string>
+    <string name="wallet_toast_address_copied">Adresse in die Zwischenablage kopiert</string>
+    <string name="wallet_balance_fiat_prefix">≈</string>
+
+    <!-- Workers Screen -->
+    <string name="screen_title_workers">Arbeiter</string>
+    <string name="workers_no_wallet">Bitte legen Sie Ihre Wallet-Adresse in den Einstellungen fest, um Arbeiterdetails anzuzeigen.</string>
+    <string name="workers_no_data">Keine aktiven Arbeiter für diese Wallet-Adresse gefunden.</string>
+    <string name="content_description_expand">Arbeiterdetails erweitern</string>
+    <string name="content_description_collapse">Arbeiterdetails reduzieren</string>
+    <string name="workers_header_session_id">Sitzungs-ID</string>
+    <string name="workers_header_hash_rate">Hash-Rate</string>
+    <string name="workers_header_difficulty">Schwierigkeit</string>
+    <string name="workers_header_uptime">Betriebszeit</string>
+    <string name="workers_header_last_seen">Zuletzt gesehen</string>
+    <string name="workers_label_session_count">%d Sitzung(en)</string>
+
+    <!-- Dashboard Screen -->
+    <string name="screen_title_dashboard">Public Pool</string>
+    <string name="dashboard_action_settings">Einstellungen</string>
+    <string name="dashboard_info_set_wallet">Bitte legen Sie Ihre Bitcoin-Wallet-Adresse in den Einstellungen fest, um Ihre Statistiken anzuzeigen.</string>
+    <string name="dashboard_card_label_your_best_difficulty">Ihre beste Schwierigkeit</string>
+    <string name="dashboard_card_label_network_difficulty">Netzwerk-Schwierigkeit</string>
+    <string name="dashboard_card_label_network_hash_rate">Netzwerk-Hash-Rate</string>
+    <string name="dashboard_card_label_block_height">Blockhöhe</string>
+    <string name="dashboard_card_secondary_block_weight_prefix">Gewicht:</string>
+    <string name="dashboard_chart_title">Hash-Raten-Verlauf</string>
+    <string name="dashboard_chart_no_data">Keine Diagrammdaten für diese Wallet verfügbar.</string>
+    <string name="dashboard_chart_set_wallet">Legen Sie die Wallet-Adresse fest, um das Diagramm anzuzeigen.</string>
+    <string name="dashboard_chart_series_10min">10 Minuten</string>
+    <string name="dashboard_chart_series_2hour">2 Stunden</string>
+</resources>

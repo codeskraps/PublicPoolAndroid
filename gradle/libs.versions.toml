@@ -1,27 +1,28 @@
 [versions]
 agp = "8.9.1"
-kotlin = "2.0.21"
+kotlin = "2.1.20"
 # --- Added Versions ---
-ksp = "1.9.23-1.0.20" # KSP version (check compatibility with Kotlin version)
-navigationCompose = "2.7.7"
+ksp = "2.1.20-1.0.32" # Updated KSP version for Kotlin 2.0.21
+navigationCompose = "2.8.9"
 ktor = "2.3.12" # Or latest stable
-room = "2.6.1"
 koin = "3.5.6"
 koinCompose = "3.5.6" # Ensure compatibility if using separate compose version
 anychart = "1.1.5" # Check for latest version
-datastore = "1.1.1"
+datastore = "1.1.4"
 coil = "2.6.0"
 logback = "1.3.14" # Or latest stable for Ktor logging
 kotlinxSerializationJson = "1.6.3" # Ensure compatibility
+voyager = "1.1.0-beta03" # Add Voyager version
 # --- End Added Versions ---
-coreKtx = "1.10.1"
+coreKtx = "1.15.0"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.6.1"
-activityCompose = "1.8.0"
-composeBom = "2024.09.00"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+lifecycleRuntimeKtx = "2.8.7"
+activityCompose = "1.10.1"
+composeBom = "2025.03.01"
 composeCompiler = "1.5.11" # Explicitly define compiler version used in build.gradle
+coreSplashscreen = "1.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -48,10 +49,6 @@ ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serializatio
 ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" } # Explicit dependency sometimes needed
-# Room
-androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
-androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 # Koin
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin"}
 koin-android = { group = "io.insert-koin", name = "koin-android" } # Version from BOM
@@ -62,6 +59,13 @@ anychart-android-core = { group = "com.github.AnyChart", name = "AnyChart-Androi
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}
 # Coil
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil"}
+# Voyager
+voyager-navigator = { group = "cafe.adriel.voyager", name = "voyager-navigator", version.ref = "voyager" }
+# voyager-androidx = { group = "cafe.adriel.voyager", name = "voyager-androidx", version.ref = "voyager" }
+voyager-koin = { group = "cafe.adriel.voyager", name = "voyager-koin", version.ref = "voyager" }
+voyager-transitions = { group = "cafe.adriel.voyager", name = "voyager-transitions", version.ref = "voyager" }
+voyager-tab-navigator = { group = "cafe.adriel.voyager", name = "voyager-tab-navigator", version.ref = "voyager" } # Add TabNavigator
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 # --- End Added Libraries ---
 
 [plugins]

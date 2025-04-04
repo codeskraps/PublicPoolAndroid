@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">PublicPool</string>
+
+    <!-- Tab Titles -->
+    <string name="tab_title_dashboard">Tableau de bord</string>
+    <string name="tab_title_workers">Travailleurs</string>
+    <string name="tab_title_wallet">Portefeuille</string>
+
+    <!-- General -->
+    <string name="error_unknown">Erreur inconnue</string>
+    <string name="text_placeholder_dash">-</string>
+    <string name="currency_usd">USD</string>
+    <string name="action_back">Retour</string>
+
+    <!-- Settings Screen -->
+    <string name="screen_title_settings">Paramètres</string>
+    <string name="settings_label_wallet_address">Adresse du portefeuille Bitcoin</string>
+    <string name="settings_button_save">Enregistrer</string>
+    <string name="settings_toast_wallet_saved">Adresse du portefeuille enregistrée</string>
+
+    <!-- Wallet Screen -->
+    <string name="screen_title_wallet_details">Détails du portefeuille</string>
+    <string name="wallet_error_not_set">Adresse du portefeuille non définie. Veuillez la configurer dans les Paramètres.</string>
+    <string name="wallet_error_load_failed">Impossible de charger les informations du portefeuille.</string>
+    <string name="wallet_label_current_btc_price">Prix actuel du BTC</string>
+    <string name="wallet_label_final_balance">Solde final</string>
+    <string name="wallet_label_total_received">Total reçu</string>
+    <string name="wallet_label_total_sent">Total envoyé</string>
+    <string name="wallet_header_recent_transactions_count">Transactions récentes (%d)</string>
+    <string name="wallet_clipboard_label">Adresse du portefeuille</string>
+    <string name="wallet_toast_address_copied">Adresse copiée dans le presse-papiers</string>
+    <string name="wallet_balance_fiat_prefix">≈</string>
+
+    <!-- Workers Screen -->
+    <string name="screen_title_workers">Travailleurs</string>
+    <string name="workers_no_wallet">Veuillez définir votre adresse de portefeuille dans les paramètres pour afficher les détails du travailleur.</string>
+    <string name="workers_no_data">Aucun travailleur actif trouvé pour cette adresse de portefeuille.</string>
+    <string name="content_description_expand">Développer les détails du travailleur</string>
+    <string name="content_description_collapse">Réduire les détails du travailleur</string>
+    <string name="workers_header_session_id">ID de session</string>
+    <string name="workers_header_hash_rate">Taux de hachage</string>
+    <string name="workers_header_difficulty">Difficulté</string>
+    <string name="workers_header_uptime">Temps de disponibilité</string>
+    <string name="workers_header_last_seen">Vu pour la dernière fois</string>
+    <string name="workers_label_session_count">%d Session(s)</string>
+
+    <!-- Dashboard Screen -->
+    <string name="screen_title_dashboard">Public Pool</string>
+    <string name="dashboard_action_settings">Paramètres</string>
+    <string name="dashboard_info_set_wallet">Veuillez définir votre adresse de portefeuille Bitcoin dans les Paramètres pour voir vos statistiques.</string>
+    <string name="dashboard_card_label_your_best_difficulty">Votre meilleure difficulté</string>
+    <string name="dashboard_card_label_network_difficulty">Difficulté du réseau</string>
+    <string name="dashboard_card_label_network_hash_rate">Taux de hachage du réseau</string>
+    <string name="dashboard_card_label_block_height">Hauteur du bloc</string>
+    <string name="dashboard_card_secondary_block_weight_prefix">Poids:</string>
+    <string name="dashboard_chart_title">Historique du taux de hachage</string>
+    <string name="dashboard_chart_no_data">Aucune donnée de graphique disponible pour ce portefeuille.</string>
+    <string name="dashboard_chart_set_wallet">Définissez l'adresse du portefeuille pour voir le graphique.</string>
+    <string name="dashboard_chart_series_10min">10 minutes</string>
+    <string name="dashboard_chart_series_2hour">2 heures</string>
+</resources>

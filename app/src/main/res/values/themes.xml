@@ -2,4 +2,18 @@
 <resources>
 
     <style name="Theme.PublicPool" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Splash Screen Theme -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- Set the splash screen background color to AppBackground -->
+        <item name="windowSplashScreenBackground">@color/app_background</item>
+
+        <!-- Use windowSplashScreenAnimatedIcon to add animation -->
+        <!-- <item name="windowSplashScreenAnimatedIcon">@drawable/...</item> -->
+        <!-- Or use windowSplashScreenIconBackgroundColor + postSplashScreenTheme -->
+
+        <!-- Set the theme of the Activity that follows your splash screen. -->
+        <!-- This is required. -->
+        <item name="postSplashScreenTheme">@style/Theme.PublicPool</item>
+    </style>
 </resources>

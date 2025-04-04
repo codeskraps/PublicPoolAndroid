@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">PublicPool</string>
+
+    <!-- Tab Titles -->
+    <string name="tab_title_dashboard">Panel</string>
+    <string name="tab_title_workers">Trabajadores</string>
+    <string name="tab_title_wallet">Billetera</string>
+
+    <!-- General -->
+    <string name="error_unknown">Error desconocido</string>
+    <string name="text_placeholder_dash">-</string>
+    <string name="currency_usd">USD</string>
+    <string name="action_back">Atrás</string>
+
+    <!-- Settings Screen -->
+    <string name="screen_title_settings">Configuración</string>
+    <string name="settings_label_wallet_address">Dirección de billetera Bitcoin</string>
+    <string name="settings_button_save">Guardar</string>
+    <string name="settings_toast_wallet_saved">Dirección de billetera guardada</string>
+
+    <!-- Wallet Screen -->
+    <string name="screen_title_wallet_details">Detalles de la billetera</string>
+    <string name="wallet_error_not_set">Dirección de billetera no configurada. Por favor, configúrela en Ajustes.</string>
+    <string name="wallet_error_load_failed">No se pudo cargar la información de la billetera.</string>
+    <string name="wallet_label_current_btc_price">Precio actual de BTC</string>
+    <string name="wallet_label_final_balance">Saldo final</string>
+    <string name="wallet_label_total_received">Total recibido</string>
+    <string name="wallet_label_total_sent">Total enviado</string>
+    <string name="wallet_header_recent_transactions_count">Transacciones recientes (%d)</string>
+    <string name="wallet_clipboard_label">Dirección de billetera</string>
+    <string name="wallet_toast_address_copied">Dirección copiada al portapapeles</string>
+    <string name="wallet_balance_fiat_prefix">≈</string>
+
+    <!-- Workers Screen -->
+    <string name="screen_title_workers">Trabajadores</string>
+    <string name="workers_no_wallet">Por favor, configure su dirección de billetera en los ajustes para ver los detalles del trabajador.</string>
+    <string name="workers_no_data">No se encontraron trabajadores activos para esta dirección de billetera.</string>
+    <string name="content_description_expand">Expandir detalles del trabajador</string>
+    <string name="content_description_collapse">Contraer detalles del trabajador</string>
+    <string name="workers_header_session_id">ID de sesión</string>
+    <string name="workers_header_hash_rate">Tasa de hash</string>
+    <string name="workers_header_difficulty">Dificultad</string>
+    <string name="workers_header_uptime">Tiempo de actividad</string>
+    <string name="workers_header_last_seen">Visto por última vez</string>
+    <string name="workers_label_session_count">%d Sesión(es)</string>
+
+    <!-- Dashboard Screen -->
+    <string name="screen_title_dashboard">Public Pool</string>
+    <string name="dashboard_action_settings">Configuración</string>
+    <string name="dashboard_info_set_wallet">Por favor, configure su dirección de billetera Bitcoin en Configuración para ver sus estadísticas.</string>
+    <string name="dashboard_card_label_your_best_difficulty">Tu mejor dificultad</string>
+    <string name="dashboard_card_label_network_difficulty">Dificultad de la red</string>
+    <string name="dashboard_card_label_network_hash_rate">Tasa de hash de la red</string>
+    <string name="dashboard_card_label_block_height">Altura del bloque</string>
+    <string name="dashboard_card_secondary_block_weight_prefix">Peso:</string>
+    <string name="dashboard_chart_title">Historial de tasa de hash</string>
+    <string name="dashboard_chart_no_data">No hay datos de gráfico disponibles para esta billetera.</string>
+    <string name="dashboard_chart_set_wallet">Configure la dirección de la billetera para ver el gráfico.</string>
+    <string name="dashboard_chart_series_10min">10 minutos</string>
+    <string name="dashboard_chart_series_2hour">2 horas</string>
+</resources>

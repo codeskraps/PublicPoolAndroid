@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">PublicPool</string>
+
+    <!-- Tab Titles -->
+    <string name="tab_title_dashboard">डैशबोर्ड</string>
+    <string name="tab_title_workers">वर्कर्स</string>
+    <string name="tab_title_wallet">वॉलेट</string>
+
+    <!-- General -->
+    <string name="error_unknown">अज्ञात त्रुटि</string>
+    <string name="text_placeholder_dash">-</string>
+    <string name="currency_usd">USD</string>
+    <string name="action_back">वापस</string>
+
+    <!-- Settings Screen -->
+    <string name="screen_title_settings">सेटिंग्स</string>
+    <string name="settings_label_wallet_address">बिटकॉइन वॉलेट पता</string>
+    <string name="settings_button_save">सहेजें</string>
+    <string name="settings_toast_wallet_saved">वॉलेट पता सहेजा गया</string>
+
+    <!-- Wallet Screen -->
+    <string name="screen_title_wallet_details">वॉलेट विवरण</string>
+    <string name="wallet_error_not_set">वॉलेट पता सेट नहीं है। कृपया सेटिंग्स में कॉन्फ़िगर करें।</string>
+    <string name="wallet_error_load_failed">वॉलेट जानकारी लोड नहीं हो सकी।</string>
+    <string name="wallet_label_current_btc_price">वर्तमान बीटीसी मूल्य</string>
+    <string name="wallet_label_final_balance">अंतिम शेष</string>
+    <string name="wallet_label_total_received">कुल प्राप्त</string>
+    <string name="wallet_label_total_sent">कुल भेजा गया</string>
+    <string name="wallet_header_recent_transactions_count">हाल के लेनदेन (%d)</string>
+    <string name="wallet_clipboard_label">वॉलेट पता</string>
+    <string name="wallet_toast_address_copied">पता क्लिपबोर्ड पर कॉपी किया गया</string>
+    <string name="wallet_balance_fiat_prefix">≈</string>
+
+    <!-- Workers Screen -->
+    <string name="screen_title_workers">वर्कर्स</string>
+    <string name="workers_no_wallet">वर्कर विवरण देखने के लिए कृपया सेटिंग्स में अपना वॉलेट पता सेट करें।</string>
+    <string name="workers_no_data">इस वॉलेट पते के लिए कोई सक्रिय वर्कर नहीं मिला।</string>
+    <string name="content_description_expand">वर्कर विवरण विस्तृत करें</string>
+    <string name="content_description_collapse">वर्कर विवरण संक्षिप्त करें</string>
+    <string name="workers_header_session_id">सत्र आईडी</string>
+    <string name="workers_header_hash_rate">हैश दर</string>
+    <string name="workers_header_difficulty">कठिनाई</string>
+    <string name="workers_header_uptime">अपटाइम</string>
+    <string name="workers_header_last_seen">अंतिम बार देखा गया</string>
+    <string name="workers_label_session_count">%d सत्र</string>
+
+    <!-- Dashboard Screen -->
+    <string name="screen_title_dashboard">पब्लिक पूल</string>
+    <string name="dashboard_action_settings">सेटिंग्स</string>
+    <string name="dashboard_info_set_wallet">अपने आँकड़े देखने के लिए कृपया सेटिंग्स में अपना बिटकॉइन वॉलेट पता सेट करें।</string>
+    <string name="dashboard_card_label_your_best_difficulty">आपकी सर्वश्रेष्ठ कठिनाई</string>
+    <string name="dashboard_card_label_network_difficulty">नेटवर्क कठिनाई</string>
+    <string name="dashboard_card_label_network_hash_rate">नेटवर्क हैश दर</string>
+    <string name="dashboard_card_label_block_height">ब्लॉक ऊंचाई</string>
+    <string name="dashboard_card_secondary_block_weight_prefix">वजन:</string>
+    <string name="dashboard_chart_title">हैश दर इतिहास</string>
+    <string name="dashboard_chart_no_data">इस वॉलेट के लिए कोई चार्ट डेटा उपलब्ध नहीं है।</string>
+    <string name="dashboard_chart_set_wallet">चार्ट देखने के लिए वॉलेट पता सेट करें।</string>
+    <string name="dashboard_chart_series_10min">10 मिनट</string>
+    <string name="dashboard_chart_series_2hour">2 घंटे</string>
+</resources>
