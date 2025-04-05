@@ -5,6 +5,8 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import com.codeskraps.publicpool.domain.usecase.GetBlockchainWalletInfoUseCase
 import com.codeskraps.publicpool.domain.usecase.GetWalletAddressUseCase
 import com.codeskraps.publicpool.domain.usecase.GetBtcPriceUseCase
+import com.codeskraps.publicpool.domain.usecase.TrackPageViewUseCase
+import com.codeskraps.publicpool.domain.usecase.TrackEventUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -13,20 +15,35 @@ import android.util.Log
 class WalletScreenModel(
     private val getWalletAddressUseCase: GetWalletAddressUseCase,
     private val getBlockchainWalletInfoUseCase: GetBlockchainWalletInfoUseCase,
-    private val getBtcPriceUseCase: GetBtcPriceUseCase
+    private val getBtcPriceUseCase: GetBtcPriceUseCase,
+    private val trackPageViewUseCase: TrackPageViewUseCase,
+    private val trackEventUseCase: TrackEventUseCase
 ) : StateScreenModel<WalletState>(WalletState()) {
 
     private val _effect = Channel<WalletEffect>()
     val effect = _effect.receiveAsFlow()
 
     init {
+        // Track page view
+        screenModelScope.launch {
+            trackPageViewUseCase("Wallet")
+        }
+        
         // Start loading wallet address immediately
         handleEvent(WalletEvent.LoadWalletDetails)
     }
 
     fun handleEvent(event: WalletEvent) {
         when (event) {
-            WalletEvent.LoadWalletDetails -> loadWalletAndDetails()
+            WalletEvent.LoadWalletDetails -> {
+                loadWalletAndDetails()
+                // Track refresh event when explicitly requested (not on initial load)
+                if (state.value.walletAddress != null) {
+                    screenModelScope.launch {
+                        trackEventUseCase("wallet_refresh", mapOf("action" to "pull_to_refresh"))
+                    }
+                }
+            }
             is WalletEvent.WalletAddressLoaded -> processWalletAddress(event.address)
             is WalletEvent.PriceResult -> processPriceResult(event.result)
         }

@@ -141,13 +141,27 @@ fun SettingsContent(screenModel: SettingsScreenModel) {
                             style = MaterialTheme.typography.bodyMedium
                         )
                         
+                        TextButton(
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW)
+                                intent.data = "https://codeskraps.com".toUri()
+                                context.startActivity(intent)
+                            }
+                        ) {
+                            Text(
+                                text = "Developer: codeskraps.com",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                        
                         Text(
-                            text = "Developer: codeskraps",
+                            text = "License: MIT",
                             style = MaterialTheme.typography.bodyMedium
                         )
                         
                         Text(
-                            text = "License: MIT",
+                            text = "Analytics: Self-hosted Umami",
                             style = MaterialTheme.typography.bodyMedium
                         )
                         
@@ -160,7 +174,7 @@ fun SettingsContent(screenModel: SettingsScreenModel) {
                             }
                         ) {
                             Text(
-                                text = "https://repo.codeskraps.com/codeskraps/PublicPoolAndroid",
+                                text = "Source Repository",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.primary,
                                 textAlign = TextAlign.Center

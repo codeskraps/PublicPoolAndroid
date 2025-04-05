@@ -24,6 +24,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -77,47 +79,53 @@ data object WalletScreen : Screen, Parcelable {
         Scaffold(
             topBar = { TopAppBar(title = { Text(stringResource(R.string.screen_title_wallet_details)) }) }
         ) { paddingValues ->
-            Box(
+            PullToRefreshBox(
+                isRefreshing = state.isWalletLoading || state.isLoading,
+                onRefresh = { screenModel.handleEvent(WalletEvent.LoadWalletDetails) },
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                when {
-                    state.isWalletLoading || state.isLoading -> {
-                        // Combined loading indicator
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    }
-                    state.walletAddress.isNullOrBlank() -> {
-                        // Use stringResource for message
-                        Text(
-                            text = stringResource(R.string.wallet_error_not_set),
-                            modifier = Modifier.align(Alignment.Center).padding(16.dp),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                    state.errorMessage != null -> {
-                        // Use stringResource for generic error, keep specific from state
-                        Text(
-                            text = state.errorMessage ?: stringResource(R.string.error_unknown),
-                            modifier = Modifier.align(Alignment.Center).padding(16.dp),
-                            color = MaterialTheme.colorScheme.error,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                    state.walletInfo == null -> {
-                         // Use stringResource for message
-                         Text(
-                            text = stringResource(R.string.wallet_error_load_failed),
-                            modifier = Modifier.align(Alignment.Center).padding(16.dp),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                    else -> {
-                        // Display Wallet Info and Transactions
-                        WalletDetailsContent(
-                            walletInfo = state.walletInfo!!,
-                            btcPrice = state.btcPrice
-                        )
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    when {
+                        state.isWalletLoading || state.isLoading -> {
+                            // Combined loading indicator
+                            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                        }
+                        state.walletAddress.isNullOrBlank() -> {
+                            // Use stringResource for message
+                            Text(
+                                text = stringResource(R.string.wallet_error_not_set),
+                                modifier = Modifier.align(Alignment.Center).padding(16.dp),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        state.errorMessage != null -> {
+                            // Use stringResource for generic error, keep specific from state
+                            Text(
+                                text = state.errorMessage ?: stringResource(R.string.error_unknown),
+                                modifier = Modifier.align(Alignment.Center).padding(16.dp),
+                                color = MaterialTheme.colorScheme.error,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        state.walletInfo == null -> {
+                             // Use stringResource for message
+                             Text(
+                                text = stringResource(R.string.wallet_error_load_failed),
+                                modifier = Modifier.align(Alignment.Center).padding(16.dp),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        else -> {
+                            // Display Wallet Info and Transactions
+                            WalletDetailsContent(
+                                walletInfo = state.walletInfo!!,
+                                btcPrice = state.btcPrice
+                            )
+                        }
                     }
                 }
             }

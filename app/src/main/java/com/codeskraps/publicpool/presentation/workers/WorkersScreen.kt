@@ -17,8 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -28,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -43,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.codeskraps.publicpool.R
@@ -53,6 +53,7 @@ import com.codeskraps.publicpool.util.formatDifficulty
 import com.codeskraps.publicpool.util.formatHashRate
 import com.codeskraps.publicpool.util.formatRelativeTime
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -79,43 +80,52 @@ data object WorkersScreen : Screen, Parcelable {
         Scaffold(
             topBar = { TopAppBar(title = { Text(stringResource(id = R.string.screen_title_workers)) }) }
         ) { paddingValues ->
-            Box(
+            PullToRefreshBox(
+                isRefreshing = state.isLoading,
+                onRefresh = { screenModel.handleEvent(WorkersEvent.LoadWorkers) },
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                when {
-                    state.isLoading -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    when {
+                        state.isLoading -> {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
                         }
-                    }
 
-                    state.errorMessage != null -> {
-                        Text(
-                            text = state.errorMessage ?: stringResource(R.string.error_unknown),
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
+                        state.errorMessage != null -> {
+                            Text(
+                                text = state.errorMessage ?: stringResource(R.string.error_unknown),
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
 
-                    state.groupedWorkers.isEmpty() && !state.isWalletLoading -> {
-                        Text(
-                            text = if (state.walletAddress.isNullOrBlank())
-                                stringResource(R.string.workers_no_wallet)
-                            else
-                                stringResource(R.string.workers_no_data),
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .padding(16.dp),
-                            textAlign = TextAlign.Center
-                        )
-                    }
+                        state.groupedWorkers.isEmpty() && !state.isWalletLoading -> {
+                            Text(
+                                text = if (state.walletAddress.isNullOrBlank())
+                                    stringResource(R.string.workers_no_wallet)
+                                else
+                                    stringResource(R.string.workers_no_data),
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .padding(16.dp),
+                                textAlign = TextAlign.Center
+                            )
+                        }
 
-                    else -> {
-                        WorkersList(groupedWorkers = state.groupedWorkers)
+                        else -> {
+                            WorkersList(
+                                groupedWorkers = state.groupedWorkers,
+                                screenModel = screenModel
+                            )
+                        }
                     }
                 }
             }
@@ -124,20 +134,36 @@ data object WorkersScreen : Screen, Parcelable {
 }
 
 @Composable
-fun WorkersList(groupedWorkers: Map<String, List<Worker>>) {
+fun WorkersList(
+    groupedWorkers: Map<String, List<Worker>>,
+    screenModel: WorkersScreenModel
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     ) {
         items(groupedWorkers.entries.toList(), key = { it.key }) { (workerName, sessions) ->
-            WorkerGroupCard(workerName = workerName, sessions = sessions)
+            WorkerGroupCard(
+                workerName = workerName, 
+                sessions = sessions,
+                onExpandCollapse = { isExpanded ->
+                    // Track worker group expansion/collapse
+                    screenModel.screenModelScope.launch {
+                        screenModel.trackWorkerGroupToggle(workerName, isExpanded)
+                    }
+                }
+            )
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
 
 @Composable
-fun WorkerGroupCard(workerName: String, sessions: List<Worker>) {
+fun WorkerGroupCard(
+    workerName: String, 
+    sessions: List<Worker>,
+    onExpandCollapse: (Boolean) -> Unit = {}
+) {
     var expanded by remember { mutableStateOf(false) }
 
     val totalHashRate = sessions.sumOf { it.hashRate ?: 0.0 }
@@ -155,7 +181,10 @@ fun WorkerGroupCard(workerName: String, sessions: List<Worker>) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { expanded = !expanded },
+                    .clickable { 
+                        expanded = !expanded
+                        onExpandCollapse(expanded)
+                    },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(

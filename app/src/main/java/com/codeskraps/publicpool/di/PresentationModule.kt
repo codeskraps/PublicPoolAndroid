@@ -8,8 +8,34 @@ import org.koin.dsl.module
 
 val presentationModule = module {
     // Voyager ScreenModels (similar to ViewModels)
-    factory { DashboardScreenModel(get(), get(), get(), get(), get(), get()) } // Add 6th `get()` for AppReadinessState
+    factory {
+        DashboardScreenModel(
+            getWalletAddressUseCase = get(),
+            getNetworkInfoUseCase = get(),
+            getClientInfoUseCase = get(),
+            getChartDataUseCase = get(),
+            calculateTwoHourAverageUseCase = get(),
+            trackPageViewUseCase = get(),
+            trackEventUseCase = get(),
+            appReadinessState = get()
+        )
+    }
     factory { SettingsScreenModel(get(), get()) } // Inject use cases
-    factory { WorkersScreenModel(get(), get()) } // Provide WorkersScreenModel
-    factory { WalletScreenModel(get(), get(), get()) } // Provide WalletScreenModel (add 3rd get)
+    factory {
+        WorkersScreenModel(
+            getWalletAddressUseCase = get(),
+            getClientInfoUseCase = get(),
+            trackPageViewUseCase = get(),
+            trackEventUseCase = get()
+        )
+    }
+    factory {
+        WalletScreenModel(
+            getWalletAddressUseCase = get(),
+            getBlockchainWalletInfoUseCase = get(),
+            getBtcPriceUseCase = get(),
+            trackPageViewUseCase = get(),
+            trackEventUseCase = get()
+        )
+    }
 } 

@@ -15,8 +15,8 @@ android {
         applicationId = "com.codeskraps.publicpool"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -54,6 +54,14 @@ android {
             excludes += "/META-INF/INDEX.LIST"
         }
     }
+    
+    applicationVariants.all {
+        val variant = this
+        variant.outputs.all {
+            val output = this as? com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            output?.outputFileName = "PublicPool-${variant.name}-v${variant.versionName}-${variant.versionCode}.apk"
+        }
+    }
 }
 
 dependencies {
@@ -63,6 +71,7 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.webkit) // WebView for analytics
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))

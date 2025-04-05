@@ -8,6 +8,8 @@ import com.codeskraps.publicpool.domain.usecase.GetChartDataUseCase
 import com.codeskraps.publicpool.domain.usecase.GetClientInfoUseCase
 import com.codeskraps.publicpool.domain.usecase.GetNetworkInfoUseCase
 import com.codeskraps.publicpool.domain.usecase.GetWalletAddressUseCase
+import com.codeskraps.publicpool.domain.usecase.TrackPageViewUseCase
+import com.codeskraps.publicpool.domain.usecase.TrackEventUseCase
 import com.codeskraps.publicpool.di.AppReadinessState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -20,6 +22,8 @@ class DashboardScreenModel(
     private val getClientInfoUseCase: GetClientInfoUseCase,
     private val getChartDataUseCase: GetChartDataUseCase,
     private val calculateTwoHourAverageUseCase: CalculateTwoHourAverageUseCase,
+    private val trackPageViewUseCase: TrackPageViewUseCase,
+    private val trackEventUseCase: TrackEventUseCase,
     private val appReadinessState: AppReadinessState
 ) : StateScreenModel<DashboardState>(DashboardState()) {
 
@@ -29,6 +33,11 @@ class DashboardScreenModel(
     private var dataLoadingJob: Job? = null
 
     init {
+        // Track page view
+        screenModelScope.launch {
+            trackPageViewUseCase("Dashboard")
+        }
+        
         // Start loading data immediately
         handleEvent(DashboardEvent.LoadData)
     }
@@ -36,8 +45,20 @@ class DashboardScreenModel(
     fun handleEvent(event: DashboardEvent) {
         when (event) {
             DashboardEvent.LoadData -> loadInitialData()
-            DashboardEvent.RefreshData -> refreshData()
-            DashboardEvent.GoToSettings -> sendEffect(DashboardEffect.NavigateToSettings)
+            DashboardEvent.RefreshData -> {
+                refreshData()
+                // Track refresh event
+                screenModelScope.launch {
+                    trackEventUseCase("dashboard_refresh", mapOf("action" to "pull_to_refresh"))
+                }
+            }
+            DashboardEvent.GoToSettings -> {
+                sendEffect(DashboardEffect.NavigateToSettings)
+                // Track settings navigation
+                screenModelScope.launch {
+                    trackEventUseCase("navigation", mapOf("to" to "settings", "from" to "dashboard"))
+                }
+            }
             // Internal Events triggered by data loading flows/calls
             is DashboardEvent.WalletAddressLoaded -> processWalletAddress(event.address)
             is DashboardEvent.NetworkInfoResult -> processNetworkInfoResult(event.result)

@@ -13,6 +13,7 @@ coil = "2.6.0"
 logback = "1.3.14" # Or latest stable for Ktor logging
 kotlinxSerializationJson = "1.6.3" # Ensure compatibility
 voyager = "1.1.0-beta03" # Add Voyager version
+webkit = "1.6.1" # WebView for Umami analytics
 # --- End Added Versions ---
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -66,6 +67,7 @@ voyager-koin = { group = "cafe.adriel.voyager", name = "voyager-koin", version.r
 voyager-transitions = { group = "cafe.adriel.voyager", name = "voyager-transitions", version.ref = "voyager" }
 voyager-tab-navigator = { group = "cafe.adriel.voyager", name = "voyager-tab-navigator", version.ref = "voyager" } # Add TabNavigator
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "webkit" }
 # --- End Added Libraries ---
 
 [plugins]

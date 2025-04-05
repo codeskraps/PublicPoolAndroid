@@ -2,7 +2,10 @@ package com.codeskraps.publicpool.di
 
 import com.codeskraps.publicpool.data.remote.KtorApiService
 import com.codeskraps.publicpool.data.remote.KtorApiServiceImpl
+import com.codeskraps.publicpool.data.remote.UmamiAnalyticsDataSource
+import com.codeskraps.publicpool.data.repository.AnalyticsRepositoryImpl
 import com.codeskraps.publicpool.data.repository.PublicPoolRepositoryImpl
+import com.codeskraps.publicpool.domain.repository.AnalyticsRepository
 import com.codeskraps.publicpool.domain.repository.PublicPoolRepository
 import io.ktor.client.* // Ktor client
 import io.ktor.client.engine.android.* // Ktor Android engine
@@ -41,4 +44,8 @@ val dataModule = module {
 
     // Repository Implementation
     single<PublicPoolRepository> { PublicPoolRepositoryImpl(apiService = get(), dataStore = get()) }
+
+    // Analytics
+    single { UmamiAnalyticsDataSource(get()) }
+    single<AnalyticsRepository> { AnalyticsRepositoryImpl(get()) }
 } 

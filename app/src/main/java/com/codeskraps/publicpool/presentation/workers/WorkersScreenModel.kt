@@ -2,32 +2,48 @@ package com.codeskraps.publicpool.presentation.workers
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.codeskraps.publicpool.presentation.workers.WorkersEffect
-import com.codeskraps.publicpool.presentation.workers.WorkersEvent
-import com.codeskraps.publicpool.presentation.workers.WorkersState
-import com.codeskraps.publicpool.domain.model.Worker
 import com.codeskraps.publicpool.domain.usecase.GetClientInfoUseCase
 import com.codeskraps.publicpool.domain.usecase.GetWalletAddressUseCase
+import com.codeskraps.publicpool.domain.usecase.TrackEventUseCase
+import com.codeskraps.publicpool.domain.usecase.TrackPageViewUseCase
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class WorkersScreenModel(
     private val getWalletAddressUseCase: GetWalletAddressUseCase,
-    private val getClientInfoUseCase: GetClientInfoUseCase
+    private val getClientInfoUseCase: GetClientInfoUseCase,
+    private val trackPageViewUseCase: TrackPageViewUseCase,
+    private val trackEventUseCase: TrackEventUseCase
 ) : StateScreenModel<WorkersState>(WorkersState()) {
 
     private val _effect = Channel<WorkersEffect>()
     val effect = _effect.receiveAsFlow()
 
     init {
+        // Track page view
+        screenModelScope.launch {
+            trackPageViewUseCase("Workers")
+        }
+        
         // Start loading wallet address immediately
         handleEvent(WorkersEvent.LoadWorkers)
     }
 
     fun handleEvent(event: WorkersEvent) {
         when (event) {
-            WorkersEvent.LoadWorkers -> loadWalletAndWorkers()
+            WorkersEvent.LoadWorkers -> {
+                loadWalletAndWorkers()
+                // Track refresh event when explicitly requested (not on initial load)
+                if (state.value.walletAddress != null) {
+                    screenModelScope.launch {
+                        trackEventUseCase("workers_refresh", mapOf("action" to "pull_to_refresh"))
+                    }
+                }
+            }
             is WorkersEvent.WalletAddressLoaded -> processWalletAddress(event.address)
         }
     }
@@ -87,5 +103,17 @@ class WorkersScreenModel(
         screenModelScope.launch {
             _effect.send(effectToSend)
         }
+    }
+
+    // Method to track worker group expansion/collapse
+    suspend fun trackWorkerGroupToggle(workerName: String, isExpanded: Boolean) {
+        val action = if (isExpanded) "expand" else "collapse"
+        trackEventUseCase(
+            "worker_group_toggle", 
+            mapOf(
+                "worker_name" to workerName,
+                "action" to action
+            )
+        )
     }
 } 

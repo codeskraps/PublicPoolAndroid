@@ -1,6 +1,7 @@
 package com.codeskraps.publicpool.presentation.dashboard
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,6 +30,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,9 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import cafe.adriel.voyager.core.screen.Screen
 import com.anychart.APIlib
 import com.anychart.AnyChart
 import com.anychart.AnyChartView
@@ -60,17 +61,16 @@ import com.codeskraps.publicpool.R
 import com.codeskraps.publicpool.domain.model.ChartDataPoint
 import com.codeskraps.publicpool.presentation.common.AppCard
 import com.codeskraps.publicpool.presentation.navigation.SettingsScreen
+import com.codeskraps.publicpool.presentation.navigation.getParentOrSelf
 import com.codeskraps.publicpool.ui.theme.PositiveGreen
 import com.codeskraps.publicpool.util.formatHashRate
+import com.codeskraps.publicpool.util.formatLargeNumber
 import com.codeskraps.publicpool.util.formatLargeNumber
 import kotlinx.coroutines.flow.collectLatest
 import java.text.NumberFormat
 import java.util.Locale
-import com.codeskraps.publicpool.presentation.navigation.getParentOrSelf
-import androidx.compose.foundation.clickable
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,7 +80,7 @@ fun DashboardContent(screenModel: DashboardScreenModel) {
     // Get the current navigator, which might be inside a tab
     val navigator = LocalNavigator.currentOrThrow
     val snackbarHostState = remember { SnackbarHostState() }
-
+    
     // Handle effects (navigation, snackbars)
     LaunchedEffect(key1 = screenModel.effect) {
         screenModel.effect.collectLatest { effect ->
@@ -121,39 +121,46 @@ fun DashboardContent(screenModel: DashboardScreenModel) {
             )
         }
     ) { paddingValues ->
-        Column(
+        PullToRefreshBox(
+            isRefreshing = state.isLoading,
+            onRefresh = { screenModel.handleEvent(DashboardEvent.RefreshData) },
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = 16.dp) // Add horizontal padding
-                .verticalScroll(rememberScrollState()) // Make column scrollable
         ) {
-            // Add padding between TopAppBar and first card row
-            Spacer(modifier = Modifier.height(16.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp) // Add horizontal padding
+                    .verticalScroll(rememberScrollState()) // Make column scrollable
+            ) {
+                // Add padding between TopAppBar and first card row
+                Spacer(modifier = Modifier.height(16.dp))
 
-            // Show message if no wallet address is set
-            if (!state.isWalletLoading && (state.walletAddress?.isBlank() != false)) {
-                AppCard(modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)) {
-                    Text(
-                        text = stringResource(R.string.dashboard_info_set_wallet),
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
+                // Show message if no wallet address is set
+                if (!state.isWalletLoading && (state.walletAddress?.isBlank() != false)) {
+                    AppCard(modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)) {
+                        Text(
+                            text = stringResource(R.string.dashboard_info_set_wallet),
+                            modifier = Modifier.padding(16.dp),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
                 }
+
+                // Top Info Cards Row/Grid
+                TopInfoCards(state = state)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Placeholder for Workers List (Add later if API provides worker data)
+                // WorkersSection(state = state)
+
+                // Chart Section
+                ChartSection(state = state)
+
+                Spacer(modifier = Modifier.height(16.dp)) // Bottom padding
             }
-
-            // Top Info Cards Row/Grid
-            TopInfoCards(state = state)
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Placeholder for Workers List (Add later if API provides worker data)
-            // WorkersSection(state = state)
-
-            // Chart Section
-            ChartSection(state = state)
-
-            Spacer(modifier = Modifier.height(16.dp)) // Bottom padding
         }
     }
 }

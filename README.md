@@ -12,6 +12,8 @@ Monitor your cryptocurrency mining activity on Public Pool directly from your An
 
 ## Installation
 
+[![Get it on Google Play](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png)](https://play.google.com/store/apps/details?id=com.codeskraps.publicpool)
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit pull requests or open issues on the project repository:
