@@ -12,11 +12,9 @@ Monitor your cryptocurrency mining activity on Public Pool directly from your An
 
 ## Screenshots
 
-<div align="center">
-  <img src="screenshots/dashboard.png" alt="Dashboard" width="250"/>
-  <img src="screenshots/workers.png" alt="Workers" width="250"/>
-  <img src="screenshots/wallet.png" alt="Wallet" width="250"/>
-</div>
+![Dashboard](screenshots/dashboard.png) | ![Workers](screenshots/workers.png) | ![Wallet](screenshots/wallet.png)
+:-------------------------:|:-------------------------:|:-------------------------:
+Dashboard | Workers | Wallet
 
 ## Installation
 
