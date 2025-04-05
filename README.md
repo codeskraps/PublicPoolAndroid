@@ -10,6 +10,14 @@ Monitor your cryptocurrency mining activity on Public Pool directly from your An
 *   **Workers:** Monitor the status of your individual mining workers, including their hash rate, difficulty, and last seen time.
 *   **Wallet:** Check your wallet balance, transaction history, and the current price of the mined currency.
 
+## Screenshots
+
+<div align="center">
+  <img src="screenshots/dashboard.png" alt="Dashboard" width="250"/>
+  <img src="screenshots/workers.png" alt="Workers" width="250"/>
+  <img src="screenshots/wallet.png" alt="Wallet" width="250"/>
+</div>
+
 ## Installation
 
 [![Get it on Google Play](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png)](https://play.google.com/store/apps/details?id=com.codeskraps.publicpool)
