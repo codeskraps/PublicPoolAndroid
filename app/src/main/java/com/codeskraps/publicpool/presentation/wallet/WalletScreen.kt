@@ -84,7 +84,12 @@ data object WalletScreen : Screen, Parcelable {
                 onRefresh = { screenModel.handleEvent(WalletEvent.LoadWalletDetails) },
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
+                    .padding(
+                        top = paddingValues.calculateTopPadding(),
+                        start = 0.dp,
+                        end = 0.dp,
+                        bottom = 0.dp
+                    )
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize()

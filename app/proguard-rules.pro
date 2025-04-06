@@ -19,3 +19,29 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Rules from missing_rules.txt
+-dontwarn javax.servlet.ServletContainerInitializer
+
+# Keep rules for libraries
+# AnyChart
+-keep class com.anychart.** { *; }
+-dontwarn com.anychart.**
+
+# Kotlinx Serialization
+-keepattributes *Annotation*, InnerClasses
+-dontnote kotlinx.serialization.AnnotationsKt
+
+# Ktor
+-keepattributes Signature, InnerClasses, EnclosingMethod
+-keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
+-keepattributes AnnotationDefault
+
+# Coil
+-dontwarn okhttp3.internal.**
+-dontwarn okio.**
+
+# General Android
+-keepattributes SourceFile,LineNumberTable
+-keepattributes Signature
+-keepattributes *Annotation*

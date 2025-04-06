@@ -20,7 +20,13 @@ internal data object DashboardTab : Tab {
         get() {
             val title = stringResource(id = R.string.tab_title_dashboard)
             val icon = rememberVectorPainter(Icons.Default.Home)
-            return remember { TabOptions(index = 0u, title = title, icon = icon) }
+            return remember { 
+                TabOptions(
+                    index = 0u, 
+                    title = title, 
+                    icon = icon
+                ) 
+            }
         }
 
     @Composable
@@ -36,7 +42,13 @@ internal data object WorkersTab : Tab {
         get() {
             val title = stringResource(id = R.string.tab_title_workers)
             val icon = painterResource(id = R.drawable.device_hub)
-            return remember { TabOptions(index = 1u, title = title, icon = icon) }
+            return remember { 
+                TabOptions(
+                    index = 1u, 
+                    title = title, 
+                    icon = icon
+                ) 
+            }
         }
 
     @Composable
@@ -52,7 +64,13 @@ internal data object WalletTab : Tab {
         get() {
             val title = stringResource(id = R.string.tab_title_wallet)
             val icon = painterResource(id = R.drawable.wallet)
-            return remember { TabOptions(index = 2u, title = title, icon = icon) }
+            return remember { 
+                TabOptions(
+                    index = 2u, 
+                    title = title, 
+                    icon = icon
+                ) 
+            }
         }
 
     @Composable

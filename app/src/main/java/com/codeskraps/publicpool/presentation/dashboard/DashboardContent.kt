@@ -34,6 +34,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +43,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -126,13 +129,18 @@ fun DashboardContent(screenModel: DashboardScreenModel) {
             onRefresh = { screenModel.handleEvent(DashboardEvent.RefreshData) },
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    start = 0.dp,
+                    end = 0.dp,
+                    bottom = 0.dp
+                )
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp) // Add horizontal padding
-                    .verticalScroll(rememberScrollState()) // Make column scrollable
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
                 // Add padding between TopAppBar and first card row
                 Spacer(modifier = Modifier.height(16.dp))
@@ -159,7 +167,8 @@ fun DashboardContent(screenModel: DashboardScreenModel) {
                 // Chart Section
                 ChartSection(state = state)
 
-                Spacer(modifier = Modifier.height(16.dp)) // Bottom padding
+                // Bottom padding that won't extend beyond the visible area
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
@@ -177,7 +186,7 @@ fun TopInfoCards(state: DashboardState) {
             secondaryValue = state.clientInfo?.bestDifficulty?.toDoubleOrNull()?.let { numberFormat.format(it) },
             isLoading = state.isClientInfoLoading,
             modifier = Modifier.weight(1f),
-            showInfoIcon = true
+            showInfoIcon = true,
         )
         Spacer(modifier = Modifier.width(8.dp))
         InfoCard(
@@ -185,7 +194,7 @@ fun TopInfoCards(state: DashboardState) {
             value = formatLargeNumber(state.networkInfo?.networkDifficulty ?: 0.0),
             secondaryValue = numberFormat.format(state.networkInfo?.networkDifficulty ?: 0.0),
             isLoading = state.isNetworkLoading,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
     }
     Spacer(modifier = Modifier.height(8.dp))
@@ -194,7 +203,7 @@ fun TopInfoCards(state: DashboardState) {
             label = stringResource(R.string.dashboard_card_label_network_hash_rate),
             value = formatHashRate(state.networkInfo?.networkHashRate ?: 0.0),
             isLoading = state.isNetworkLoading,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Spacer(modifier = Modifier.width(8.dp))
         InfoCard(
@@ -202,7 +211,7 @@ fun TopInfoCards(state: DashboardState) {
             value = numberFormat.format(state.networkInfo?.blockHeight ?: 0L),
             secondaryValue = "${stringResource(R.string.dashboard_card_secondary_block_weight_prefix)} ${numberFormat.format(state.networkInfo?.blockWeight ?: 0L)}",
             isLoading = state.isNetworkLoading,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
     }
 }
@@ -214,7 +223,7 @@ fun InfoCard(
     isLoading: Boolean,
     modifier: Modifier = Modifier,
     secondaryValue: String? = null,
-    showInfoIcon: Boolean = false
+    showInfoIcon: Boolean = false,
 ) {
     val showDialog = remember { mutableStateOf(false) }
     
@@ -235,17 +244,19 @@ fun InfoCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .defaultMinSize(minHeight = 90.dp)
+                .defaultMinSize(minHeight = 100.dp)
                 .padding(12.dp),
-             verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Top,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = label, 
                     style = MaterialTheme.typography.labelMedium, 
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.weight(1f)
                 )
                 if (showInfoIcon) {
                     Spacer(modifier = Modifier.width(4.dp))
@@ -253,12 +264,19 @@ fun InfoCard(
                         imageVector = Icons.Default.Info,
                         contentDescription = stringResource(R.string.info_icon_description),
                         modifier = Modifier
-                            .size(16.dp)
-                            .clickable { showDialog.value = true },
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            .size(20.dp)
+                            .clickable(
+                                onClick = { showDialog.value = true },
+                                indication = null,
+                                interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+                            )
+                            .padding(2.dp),
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
+            
+            Spacer(modifier = Modifier.height(8.dp))
             
             Box(modifier = Modifier.align(Alignment.End)) {
                 if (isLoading) {
@@ -271,11 +289,13 @@ fun InfoCard(
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        Text(
-                            text = secondaryValue ?: "",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = if (secondaryValue != null) PositiveGreen else Color.Transparent
-                        )
+                        if (secondaryValue != null && secondaryValue.isNotEmpty()) {
+                            Text(
+                                text = secondaryValue,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = PositiveGreen
+                            )
+                        }
                     }
                 }
             }
