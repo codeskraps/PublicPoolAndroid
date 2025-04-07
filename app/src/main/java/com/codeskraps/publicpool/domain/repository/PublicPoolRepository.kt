@@ -20,6 +20,10 @@ interface PublicPoolRepository {
     fun getWalletAddress(): Flow<String?> // Flow to observe changes
     suspend fun saveWalletAddress(address: String)
 
+    // --- Base URL Management ---
+    fun getBaseUrl(): Flow<String>
+    suspend fun saveBaseUrl(url: String)
+
     // --- Blockchain.info Data ---
     suspend fun getBlockchainWalletInfo(walletAddress: String): Result<WalletInfo>
 

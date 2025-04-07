@@ -20,6 +20,8 @@ import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 val dataModule = module {
 
@@ -46,7 +48,14 @@ val dataModule = module {
     }
 
     // API Service Implementation
-    singleOf(::KtorApiServiceImpl) bind KtorApiService::class
+    single<KtorApiService> {
+        KtorApiServiceImpl(
+            client = get(),
+            baseUrlProvider = {
+                runBlocking { get<PublicPoolRepository>().getBaseUrl().first() }
+            }
+        )
+    }
 
     // Repository Implementation
     singleOf(::PublicPoolRepositoryImpl) bind PublicPoolRepository::class

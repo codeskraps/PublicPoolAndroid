@@ -57,8 +57,8 @@ import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data object WorkersScreen : Screen, Parcelable {
-    private fun readResolve(): Any = WorkersScreen
+data object WorkersContent : Screen, Parcelable {
+    private fun readResolve(): Any = WorkersContent
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable

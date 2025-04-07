@@ -15,8 +15,10 @@
     <!-- Settings Screen -->
     <string name="screen_title_settings">Configuración</string>
     <string name="settings_label_wallet_address">Dirección de billetera Bitcoin</string>
+    <string name="settings_label_base_url">URL base</string>
     <string name="settings_button_save">Guardar</string>
     <string name="settings_toast_wallet_saved">Dirección de billetera guardada</string>
+    <string name="settings_toast_base_url_saved">URL base guardada</string>
 
     <!-- Wallet Screen -->
     <string name="screen_title_wallet_details">Detalles de la billetera</string>

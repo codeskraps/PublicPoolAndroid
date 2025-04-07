@@ -15,8 +15,10 @@
     <!-- Settings Screen -->
     <string name="screen_title_settings">सेटिंग्स</string>
     <string name="settings_label_wallet_address">बिटकॉइन वॉलेट पता</string>
+    <string name="settings_label_base_url">बेस URL</string>
     <string name="settings_button_save">सहेजें</string>
     <string name="settings_toast_wallet_saved">वॉलेट पता सहेजा गया</string>
+    <string name="settings_toast_base_url_saved">बेस URL सहेजा गया</string>
 
     <!-- Wallet Screen -->
     <string name="screen_title_wallet_details">वॉलेट विवरण</string>

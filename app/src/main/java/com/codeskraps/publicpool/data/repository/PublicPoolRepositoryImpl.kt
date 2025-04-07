@@ -86,9 +86,35 @@ class PublicPoolRepositoryImpl(
             }
        } catch(e: Exception) {
             Log.e(TAG, "Failed to save wallet address to DataStore", e)
-            // Optionally rethrow or handle the error based on requirements (e.g., return Result<Unit>)
-            // For now, just log the error.
+            throw e
        }
+    }
+
+    // --- Base URL Management ---
+    override fun getBaseUrl(): Flow<String> {
+        return dataStore.data
+            .catch { exception ->
+                if (exception is IOException) {
+                    Log.e(TAG, "Error reading base URL from DataStore", exception)
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            .map { preferences ->
+                preferences[PreferencesKeys.BASE_URL] ?: KtorApiService.DEFAULT_BASE_URL
+            }
+    }
+
+    override suspend fun saveBaseUrl(url: String) {
+        try {
+            dataStore.edit { preferences ->
+                preferences[PreferencesKeys.BASE_URL] = url
+            }
+        } catch(e: Exception) {
+            Log.e(TAG, "Failed to save base URL to DataStore", e)
+            throw e
+        }
     }
 
     // --- Blockchain.info Data ---

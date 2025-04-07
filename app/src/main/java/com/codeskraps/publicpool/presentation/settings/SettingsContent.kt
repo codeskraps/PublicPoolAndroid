@@ -45,20 +45,18 @@ import kotlinx.coroutines.flow.collectLatest
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsContent(screenModel: SettingsScreenModel) {
-    val state by screenModel.state.collectAsState() // Collect state from ScreenModel
+    val state by screenModel.state.collectAsState()
     val context = LocalContext.current
-    val navigator = LocalNavigator.currentOrThrow // Get the navigator
-    val focusManager = LocalFocusManager.current // Focus manager to hide keyboard
+    val navigator = LocalNavigator.currentOrThrow
+    val focusManager = LocalFocusManager.current
 
-    // Track page view when screen becomes visible
     LaunchedEffect(Unit) {
         screenModel.handleEvent(SettingsEvent.OnScreenVisible)
     }
 
-    // Resolve strings needed inside LaunchedEffect here
     val walletSavedMessage = stringResource(R.string.settings_toast_wallet_saved)
+    val baseUrlSavedMessage = stringResource(R.string.settings_toast_base_url_saved)
 
-    // Effect handling (e.g., showing toasts)
     LaunchedEffect(key1 = screenModel.effect) {
         screenModel.effect.collectLatest { effect ->
             when (effect) {
@@ -66,8 +64,10 @@ fun SettingsContent(screenModel: SettingsScreenModel) {
                     Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
                 }
                 SettingsEffect.WalletAddressSaved -> {
-                    // Use the pre-resolved string
                     Toast.makeText(context, walletSavedMessage, Toast.LENGTH_SHORT).show()
+                }
+                SettingsEffect.BaseUrlSaved -> {
+                    Toast.makeText(context, baseUrlSavedMessage, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -108,10 +108,20 @@ fun SettingsContent(screenModel: SettingsScreenModel) {
                     singleLine = true
                 )
 
+                // Base URL Section
+                OutlinedTextField(
+                    value = state.baseUrl,
+                    onValueChange = { screenModel.handleEvent(SettingsEvent.BaseUrlChanged(it)) },
+                    label = { Text(stringResource(R.string.settings_label_base_url)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                // Single Save Button for both fields
                 Button(
                     onClick = { 
-                        screenModel.handleEvent(SettingsEvent.SaveWalletAddress)
-                        focusManager.clearFocus() // Clear focus to hide keyboard
+                        screenModel.handleEvent(SettingsEvent.SaveSettings)
+                        focusManager.clearFocus()
                     },
                     modifier = Modifier.align(Alignment.End),
                     colors = ButtonDefaults.buttonColors(

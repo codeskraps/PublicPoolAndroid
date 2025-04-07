@@ -15,8 +15,10 @@
     <!-- Settings Screen -->
     <string name="screen_title_settings">设置</string>
     <string name="settings_label_wallet_address">比特币钱包地址</string>
+    <string name="settings_label_base_url">基础 URL</string>
     <string name="settings_button_save">保存</string>
     <string name="settings_toast_wallet_saved">钱包地址已保存</string>
+    <string name="settings_toast_base_url_saved">基础 URL 已保存</string>
 
     <!-- Wallet Screen -->
     <string name="screen_title_wallet_details">钱包详情</string>

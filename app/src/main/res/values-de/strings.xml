@@ -15,8 +15,10 @@
     <!-- Settings Screen -->
     <string name="screen_title_settings">Einstellungen</string>
     <string name="settings_label_wallet_address">Bitcoin-Wallet-Adresse</string>
+    <string name="settings_label_base_url">Basis-URL</string>
     <string name="settings_button_save">Speichern</string>
     <string name="settings_toast_wallet_saved">Wallet-Adresse gespeichert</string>
+    <string name="settings_toast_base_url_saved">Basis-URL gespeichert</string>
 
     <!-- Wallet Screen -->
     <string name="screen_title_wallet_details">Wallet-Details</string>

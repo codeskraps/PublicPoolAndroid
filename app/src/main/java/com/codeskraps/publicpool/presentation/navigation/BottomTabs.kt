@@ -11,7 +11,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.codeskraps.publicpool.R
 import com.codeskraps.publicpool.presentation.wallet.WalletContent
-import com.codeskraps.publicpool.presentation.workers.WorkersScreen
+import com.codeskraps.publicpool.presentation.workers.WorkersContent
 
 internal data object DashboardTab : Tab {
     private fun readResolve(): Any = DashboardTab
@@ -53,7 +53,7 @@ internal data object WorkersTab : Tab {
 
     @Composable
     override fun Content() {
-        WorkersScreen.Content()
+        WorkersContent.Content()
     }
 }
 

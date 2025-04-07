@@ -25,28 +25,28 @@ interface KtorApiService {
 
     // We can add implementations here or in a separate class
     companion object {
-        const val BASE_URL = "https://public-pool.io:40557/api" // Define base URL
-        const val BLOCKCHAIN_INFO_BASE_URL = "https://blockchain.info" // New base URL
-        const val BINANCE_BASE_URL = "https://api.binance.com" // Binance base URL
+        const val DEFAULT_BASE_URL = "https://public-pool.io:40557/api"
+        const val BLOCKCHAIN_INFO_BASE_URL = "https://blockchain.info"
+        const val BINANCE_BASE_URL = "https://api.binance.com"
     }
 }
 
 // Example Implementation (can be provided via Koin later)
-class KtorApiServiceImpl(private val client: HttpClient) : KtorApiService {
+class KtorApiServiceImpl(
+    private val client: HttpClient,
+    private val baseUrlProvider: () -> String = { KtorApiService.DEFAULT_BASE_URL }
+) : KtorApiService {
 
     override suspend fun getClientInfo(walletAddress: String): ClientInfoDto {
-        return client.get("${KtorApiService.BASE_URL}/client/$walletAddress").body()
+        return client.get("${baseUrlProvider()}/client/$walletAddress").body()
     }
 
     override suspend fun getNetworkInfo(): NetworkInfoDto {
-        return client.get("${KtorApiService.BASE_URL}/network").body()
+        return client.get("${baseUrlProvider()}/network").body()
     }
 
     override suspend fun getChartData(walletAddress: String): List<ChartDataPointDto> {
-        // Use the correct URL with /chart and expect a List directly
-        return client.get("${KtorApiService.BASE_URL}/client/$walletAddress/chart").body<List<ChartDataPointDto>>()
-        // Or let type inference work:
-        // return client.get("${KtorApiService.BASE_URL}/client/$walletAddress/chart").body()
+        return client.get("${baseUrlProvider()}/client/$walletAddress/chart").body()
     }
 
     // Implementation for new function
