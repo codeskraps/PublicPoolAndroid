@@ -42,6 +42,7 @@ sealed interface DashboardEvent : UiEvent {
     data class NetworkInfoResult(val result: Result<NetworkInfo>) : DashboardEvent // Internal event
     data class ClientInfoResult(val result: Result<ClientInfo>) : DashboardEvent // Internal event
     data class ChartDataResult(val result: Result<List<ChartDataPoint>>) : DashboardEvent // Internal event
+    data object OnScreenVisible : DashboardEvent
 }
 
 // --- Effects ---

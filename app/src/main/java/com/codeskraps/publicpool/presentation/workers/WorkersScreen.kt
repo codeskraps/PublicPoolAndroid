@@ -67,6 +67,11 @@ data object WorkersScreen : Screen, Parcelable {
         val state by screenModel.state.collectAsState()
         val context = LocalContext.current
 
+        // Track page view when screen becomes visible
+        LaunchedEffect(Unit) {
+            screenModel.handleEvent(WorkersEvent.OnScreenVisible)
+        }
+
         LaunchedEffect(key1 = screenModel.effect) {
             screenModel.effect.collectLatest { effect ->
                 when (effect) {

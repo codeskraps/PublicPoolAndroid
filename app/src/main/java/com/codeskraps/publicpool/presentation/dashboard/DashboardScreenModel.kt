@@ -33,11 +33,6 @@ class DashboardScreenModel(
     private var dataLoadingJob: Job? = null
 
     init {
-        // Track page view
-        screenModelScope.launch {
-            trackPageViewUseCase("Dashboard")
-        }
-        
         // Start loading data immediately
         handleEvent(DashboardEvent.LoadData)
     }
@@ -57,6 +52,11 @@ class DashboardScreenModel(
                 // Track settings navigation
                 screenModelScope.launch {
                     trackEventUseCase("navigation", mapOf("to" to "settings", "from" to "dashboard"))
+                }
+            }
+            DashboardEvent.OnScreenVisible -> {
+                screenModelScope.launch {
+                    trackPageViewUseCase("Dashboard")
                 }
             }
             // Internal Events triggered by data loading flows/calls
@@ -89,7 +89,7 @@ class DashboardScreenModel(
         appReadinessState.setReady()
 
         mutableState.update { it.copy(walletAddress = address, isWalletLoading = false) }
-        if (address != null && address.isNotBlank()) {
+        if (!address.isNullOrBlank()) {
             // Wallet address available, fetch client-specific data
             fetchClientInfoAndChartData(address)
         } else {
@@ -116,7 +116,7 @@ class DashboardScreenModel(
         fetchNetworkInfo()
         state.value.walletAddress?.let { address ->
             if (address.isNotBlank()) {
-                fetchClientInfoAndChartData(address, isRefresh = true)
+                fetchClientInfoAndChartData(address)
             }
         }
     }
@@ -129,7 +129,7 @@ class DashboardScreenModel(
         }
     }
 
-    private fun fetchClientInfoAndChartData(address: String, isRefresh: Boolean = false) {
+    private fun fetchClientInfoAndChartData(address: String) {
         dataLoadingJob?.cancel() // Cancel previous loads before starting new ones
         dataLoadingJob = screenModelScope.launch {
             mutableState.update {

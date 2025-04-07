@@ -3,14 +3,18 @@ package com.codeskraps.publicpool.presentation.settings
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.codeskraps.publicpool.domain.usecase.GetWalletAddressUseCase
+import com.codeskraps.publicpool.domain.usecase.IdentifyUserUseCase
 import com.codeskraps.publicpool.domain.usecase.SaveWalletAddressUseCase
+import com.codeskraps.publicpool.domain.usecase.TrackPageViewUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class SettingsScreenModel(
     private val getWalletAddressUseCase: GetWalletAddressUseCase,
-    private val saveWalletAddressUseCase: SaveWalletAddressUseCase
+    private val saveWalletAddressUseCase: SaveWalletAddressUseCase,
+    private val identifyUserUseCase: IdentifyUserUseCase,
+    private val trackPageViewUseCase: TrackPageViewUseCase
 ) : StateScreenModel<SettingsState>(SettingsState()) { // Initialize with default state
 
     private val _effect = Channel<SettingsEffect>()
@@ -29,6 +33,11 @@ class SettingsScreenModel(
             }
             SettingsEvent.SaveWalletAddress -> saveWalletAddress()
             SettingsEvent.LoadWalletAddress -> loadWalletAddress()
+            SettingsEvent.OnScreenVisible -> {
+                screenModelScope.launch {
+                    trackPageViewUseCase("Settings")
+                }
+            }
         }
     }
 
@@ -48,6 +57,9 @@ class SettingsScreenModel(
                             isLoading = false
                         )
                     }
+                    
+                    // Identify user with the loaded wallet address
+                    identifyUserUseCase(address)
                 }
         }
     }
@@ -58,6 +70,10 @@ class SettingsScreenModel(
                 // Use the current address from the state, explicitly allowing blank addresses
                 val addressToSave = mutableState.value.walletAddress
                 saveWalletAddressUseCase(addressToSave)
+                
+                // Identify user with the newly saved wallet address
+                identifyUserUseCase(addressToSave)
+                
                 _effect.send(SettingsEffect.WalletAddressSaved)
             } catch (e: Exception) {
                 // Handle error saving address

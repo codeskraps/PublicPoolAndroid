@@ -32,19 +32,16 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -68,12 +65,9 @@ import com.codeskraps.publicpool.presentation.navigation.getParentOrSelf
 import com.codeskraps.publicpool.ui.theme.PositiveGreen
 import com.codeskraps.publicpool.util.formatHashRate
 import com.codeskraps.publicpool.util.formatLargeNumber
-import com.codeskraps.publicpool.util.formatLargeNumber
 import kotlinx.coroutines.flow.collectLatest
 import java.text.NumberFormat
 import java.util.Locale
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,6 +77,11 @@ fun DashboardContent(screenModel: DashboardScreenModel) {
     // Get the current navigator, which might be inside a tab
     val navigator = LocalNavigator.currentOrThrow
     val snackbarHostState = remember { SnackbarHostState() }
+    
+    // Track page view when screen becomes visible
+    LaunchedEffect(Unit) {
+        screenModel.handleEvent(DashboardEvent.OnScreenVisible)
+    }
     
     // Handle effects (navigation, snackbars)
     LaunchedEffect(key1 = screenModel.effect) {
@@ -289,7 +288,7 @@ fun InfoCard(
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        if (secondaryValue != null && secondaryValue.isNotEmpty()) {
+                        if (!secondaryValue.isNullOrEmpty()) {
                             Text(
                                 text = secondaryValue,
                                 style = MaterialTheme.typography.bodySmall,

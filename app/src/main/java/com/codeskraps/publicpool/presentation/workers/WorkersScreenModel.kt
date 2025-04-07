@@ -24,11 +24,6 @@ class WorkersScreenModel(
     val effect = _effect.receiveAsFlow()
 
     init {
-        // Track page view
-        screenModelScope.launch {
-            trackPageViewUseCase("Workers")
-        }
-        
         // Start loading wallet address immediately
         handleEvent(WorkersEvent.LoadWorkers)
     }
@@ -42,6 +37,11 @@ class WorkersScreenModel(
                     screenModelScope.launch {
                         trackEventUseCase("workers_refresh", mapOf("action" to "pull_to_refresh"))
                     }
+                }
+            }
+            WorkersEvent.OnScreenVisible -> {
+                screenModelScope.launch {
+                    trackPageViewUseCase("Workers")
                 }
             }
             is WorkersEvent.WalletAddressLoaded -> processWalletAddress(event.address)

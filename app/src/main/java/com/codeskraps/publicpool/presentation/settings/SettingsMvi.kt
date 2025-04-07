@@ -15,6 +15,7 @@ sealed interface SettingsEvent : UiEvent {
     data class WalletAddressChanged(val address: String) : SettingsEvent
     data object SaveWalletAddress : SettingsEvent
     data object LoadWalletAddress : SettingsEvent // To trigger initial load
+    data object OnScreenVisible : SettingsEvent
 }
 
 // --- Effects ---

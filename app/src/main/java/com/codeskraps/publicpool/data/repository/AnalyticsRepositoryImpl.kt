@@ -18,4 +18,8 @@ class AnalyticsRepositoryImpl(
     override suspend fun trackEvent(eventName: String, eventData: Map<String, String>) {
         analyticsDataSource.trackEvent(eventName, eventData)
     }
+    
+    override suspend fun identifyUser(walletAddress: String?) {
+        analyticsDataSource.identifyUser(walletAddress)
+    }
 } 

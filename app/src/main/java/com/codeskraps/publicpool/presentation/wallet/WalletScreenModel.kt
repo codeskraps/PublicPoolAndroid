@@ -24,11 +24,6 @@ class WalletScreenModel(
     val effect = _effect.receiveAsFlow()
 
     init {
-        // Track page view
-        screenModelScope.launch {
-            trackPageViewUseCase("Wallet")
-        }
-        
         // Start loading wallet address immediately
         handleEvent(WalletEvent.LoadWalletDetails)
     }
@@ -42,6 +37,11 @@ class WalletScreenModel(
                     screenModelScope.launch {
                         trackEventUseCase("wallet_refresh", mapOf("action" to "pull_to_refresh"))
                     }
+                }
+            }
+            WalletEvent.OnScreenVisible -> {
+                screenModelScope.launch {
+                    trackPageViewUseCase("Wallet")
                 }
             }
             is WalletEvent.WalletAddressLoaded -> processWalletAddress(event.address)
@@ -69,7 +69,7 @@ class WalletScreenModel(
 
     private fun processWalletAddress(address: String?) {
         mutableState.update { it.copy(walletAddress = address, isWalletLoading = false) }
-        if (address != null && address.isNotBlank()) {
+        if (!address.isNullOrBlank()) {
             fetchWalletDetails(address)
         } else {
             // No wallet address, clear info and show message

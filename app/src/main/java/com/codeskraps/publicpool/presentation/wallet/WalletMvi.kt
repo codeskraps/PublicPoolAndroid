@@ -1,7 +1,7 @@
 package com.codeskraps.publicpool.presentation.wallet
 
-import com.codeskraps.publicpool.domain.model.WalletInfo
 import com.codeskraps.publicpool.domain.model.CryptoPrice
+import com.codeskraps.publicpool.domain.model.WalletInfo
 import com.codeskraps.publicpool.presentation.common.UiEffect
 import com.codeskraps.publicpool.presentation.common.UiEvent
 import com.codeskraps.publicpool.presentation.common.UiState
@@ -25,6 +25,7 @@ sealed interface WalletEvent : UiEvent {
     data object LoadWalletDetails : WalletEvent
     data class WalletAddressLoaded(val address: String?) : WalletEvent // Internal
     data class PriceResult(val result: Result<CryptoPrice>) : WalletEvent // Internal for price
+    data object OnScreenVisible : WalletEvent
 }
 
 // --- Effects ---

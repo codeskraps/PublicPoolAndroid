@@ -10,7 +10,7 @@ import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.codeskraps.publicpool.R
-import com.codeskraps.publicpool.presentation.wallet.WalletScreen
+import com.codeskraps.publicpool.presentation.wallet.WalletContent
 import com.codeskraps.publicpool.presentation.workers.WorkersScreen
 
 internal data object DashboardTab : Tab {
@@ -75,6 +75,6 @@ internal data object WalletTab : Tab {
 
     @Composable
     override fun Content() {
-        WalletScreen.Content()
+        WalletContent.Content()
     }
 } 

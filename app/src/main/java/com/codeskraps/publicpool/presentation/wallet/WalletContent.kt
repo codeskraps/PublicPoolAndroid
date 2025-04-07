@@ -1,8 +1,5 @@
 package com.codeskraps.publicpool.presentation.wallet
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.os.Parcelable
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +22,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -56,8 +52,8 @@ import java.util.Currency
 import java.util.Locale
 
 @Parcelize
-data object WalletScreen : Screen, Parcelable {
-    private fun readResolve(): Any = WalletScreen
+data object WalletContent : Screen, Parcelable {
+    private fun readResolve(): Any = WalletContent
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -65,6 +61,11 @@ data object WalletScreen : Screen, Parcelable {
         val screenModel: WalletScreenModel = koinScreenModel()
         val state by screenModel.state.collectAsState()
         val context = LocalContext.current
+
+        // Track page view when screen becomes visible
+        LaunchedEffect(Unit) {
+            screenModel.handleEvent(WalletEvent.OnScreenVisible)
+        }
 
         LaunchedEffect(key1 = screenModel.effect) {
             screenModel.effect.collectLatest { effect ->
@@ -143,7 +144,6 @@ fun WalletDetailsContent(
     walletInfo: WalletInfo,
     btcPrice: CryptoPrice?
 ) {
-    val context = LocalContext.current
     val btcFormat = remember { "%.8f BTC" }
     val dateFormatter = remember { DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm") }
     val displayCurrency = stringResource(R.string.currency_usd)
@@ -253,11 +253,11 @@ fun CurrentPriceCard(btcPrice: CryptoPrice?, currencyFormat: NumberFormat) {
 
 @Composable
 fun BalanceCard(
+    modifier: Modifier = Modifier,
     label: String,
     valueBtc: String,
     valueFiat: String? = null,
-    fiatCurrencyLabel: String? = null,
-    modifier: Modifier = Modifier
+    fiatCurrencyLabel: String? = null
 ) {
     AppCard(modifier = modifier) {
         Column(
@@ -320,15 +320,3 @@ fun TransactionItem(tx: WalletTransaction, dateFormatter: DateTimeFormatter) {
         }
     }
 }
-
-// Helper function to copy text to clipboard
-fun copyToClipboard(context: Context, text: String) {
-    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    // Use context.getString() for non-composable contexts
-    val label = context.getString(R.string.wallet_clipboard_label)
-    val message = context.getString(R.string.wallet_toast_address_copied)
-
-    val clip = ClipData.newPlainText(label, text)
-    clipboard.setPrimaryClip(clip)
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-} 

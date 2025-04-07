@@ -50,6 +50,11 @@ fun SettingsContent(screenModel: SettingsScreenModel) {
     val navigator = LocalNavigator.currentOrThrow // Get the navigator
     val focusManager = LocalFocusManager.current // Focus manager to hide keyboard
 
+    // Track page view when screen becomes visible
+    LaunchedEffect(Unit) {
+        screenModel.handleEvent(SettingsEvent.OnScreenVisible)
+    }
+
     // Resolve strings needed inside LaunchedEffect here
     val walletSavedMessage = stringResource(R.string.settings_toast_wallet_saved)
 

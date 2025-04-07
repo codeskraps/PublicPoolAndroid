@@ -19,6 +19,7 @@ data class WorkersState(
 sealed interface WorkersEvent : UiEvent {
     data object LoadWorkers : WorkersEvent
     data class WalletAddressLoaded(val address: String?) : WorkersEvent // Internal
+    data object OnScreenVisible : WorkersEvent
 }
 
 // --- Effects ---
