@@ -7,6 +7,7 @@ import com.codeskraps.publicpool.domain.usecase.GetWalletAddressUseCase
 import com.codeskraps.publicpool.domain.usecase.GetBtcPriceUseCase
 import com.codeskraps.publicpool.domain.usecase.TrackPageViewUseCase
 import com.codeskraps.publicpool.domain.usecase.TrackEventUseCase
+import com.codeskraps.publicpool.di.AppLifecycleState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -17,7 +18,8 @@ class WalletScreenModel(
     private val getBlockchainWalletInfoUseCase: GetBlockchainWalletInfoUseCase,
     private val getBtcPriceUseCase: GetBtcPriceUseCase,
     private val trackPageViewUseCase: TrackPageViewUseCase,
-    private val trackEventUseCase: TrackEventUseCase
+    private val trackEventUseCase: TrackEventUseCase,
+    private val appLifecycleState: AppLifecycleState
 ) : StateScreenModel<WalletState>(WalletState()) {
 
     private val _effect = Channel<WalletEffect>()
@@ -26,6 +28,16 @@ class WalletScreenModel(
     init {
         // Start loading wallet address immediately
         handleEvent(WalletEvent.LoadWalletDetails)
+
+        // Observe app lifecycle state
+        screenModelScope.launch {
+            appLifecycleState.isAppInBackground.collect { isInBackground ->
+                if (!isInBackground) {
+                    // App came back to foreground, trigger refresh
+                    handleEvent(WalletEvent.LoadWalletDetails)
+                }
+            }
+        }
     }
 
     fun handleEvent(event: WalletEvent) {

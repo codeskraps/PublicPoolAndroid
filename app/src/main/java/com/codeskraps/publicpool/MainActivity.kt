@@ -28,6 +28,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import com.codeskraps.publicpool.di.AppLifecycleState
 import com.codeskraps.publicpool.di.AppReadinessState
 import com.codeskraps.publicpool.presentation.navigation.DashboardTab
 import com.codeskraps.publicpool.presentation.navigation.WalletTab
@@ -37,6 +38,7 @@ import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
     val appReadinessState: AppReadinessState by inject()
+    val appLifecycleState: AppLifecycleState by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -54,6 +56,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        appLifecycleState.setAppInBackground(true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        appLifecycleState.setAppInBackground(false)
     }
 
     private fun setupSplashScreenKeepCondition() {

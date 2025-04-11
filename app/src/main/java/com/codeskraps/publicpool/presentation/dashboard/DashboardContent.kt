@@ -125,7 +125,9 @@ fun DashboardContent(screenModel: DashboardScreenModel) {
     ) { paddingValues ->
         PullToRefreshBox(
             isRefreshing = state.isLoading,
-            onRefresh = { screenModel.handleEvent(DashboardEvent.RefreshData) },
+            onRefresh = { 
+                screenModel.handleEvent(DashboardEvent.RefreshData)
+            },
             modifier = Modifier
                 .fillMaxSize()
                 .padding(

@@ -18,4 +18,7 @@ val appModule = module {
     
     // Provide AppReadinessState as a singleton
     singleOf(::AppReadinessState)
+    
+    // Provide AppLifecycleState as a singleton
+    singleOf(::AppLifecycleState)
 } 

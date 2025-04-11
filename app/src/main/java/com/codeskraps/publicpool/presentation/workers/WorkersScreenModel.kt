@@ -6,6 +6,7 @@ import com.codeskraps.publicpool.domain.usecase.GetClientInfoUseCase
 import com.codeskraps.publicpool.domain.usecase.GetWalletAddressUseCase
 import com.codeskraps.publicpool.domain.usecase.TrackEventUseCase
 import com.codeskraps.publicpool.domain.usecase.TrackPageViewUseCase
+import com.codeskraps.publicpool.di.AppLifecycleState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
@@ -17,7 +18,8 @@ class WorkersScreenModel(
     private val getWalletAddressUseCase: GetWalletAddressUseCase,
     private val getClientInfoUseCase: GetClientInfoUseCase,
     private val trackPageViewUseCase: TrackPageViewUseCase,
-    private val trackEventUseCase: TrackEventUseCase
+    private val trackEventUseCase: TrackEventUseCase,
+    private val appLifecycleState: AppLifecycleState
 ) : StateScreenModel<WorkersState>(WorkersState()) {
 
     private val _effect = Channel<WorkersEffect>()
@@ -26,6 +28,16 @@ class WorkersScreenModel(
     init {
         // Start loading wallet address immediately
         handleEvent(WorkersEvent.LoadWorkers)
+
+        // Observe app lifecycle state
+        screenModelScope.launch {
+            appLifecycleState.isAppInBackground.collect { isInBackground ->
+                if (!isInBackground) {
+                    // App came back to foreground, trigger refresh
+                    handleEvent(WorkersEvent.LoadWorkers)
+                }
+            }
+        }
     }
 
     fun handleEvent(event: WorkersEvent) {

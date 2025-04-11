@@ -10,6 +10,7 @@ import com.codeskraps.publicpool.domain.usecase.GetNetworkInfoUseCase
 import com.codeskraps.publicpool.domain.usecase.GetWalletAddressUseCase
 import com.codeskraps.publicpool.domain.usecase.TrackPageViewUseCase
 import com.codeskraps.publicpool.domain.usecase.TrackEventUseCase
+import com.codeskraps.publicpool.di.AppLifecycleState
 import com.codeskraps.publicpool.di.AppReadinessState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -24,7 +25,8 @@ class DashboardScreenModel(
     private val calculateTwoHourAverageUseCase: CalculateTwoHourAverageUseCase,
     private val trackPageViewUseCase: TrackPageViewUseCase,
     private val trackEventUseCase: TrackEventUseCase,
-    private val appReadinessState: AppReadinessState
+    private val appReadinessState: AppReadinessState,
+    private val appLifecycleState: AppLifecycleState
 ) : StateScreenModel<DashboardState>(DashboardState()) {
 
     private val _effect = Channel<DashboardEffect>()
@@ -35,6 +37,16 @@ class DashboardScreenModel(
     init {
         // Start loading data immediately
         handleEvent(DashboardEvent.LoadData)
+
+        // Observe app lifecycle state
+        screenModelScope.launch {
+            appLifecycleState.isAppInBackground.collect { isInBackground ->
+                if (!isInBackground) {
+                    // App came back to foreground, trigger refresh
+                    handleEvent(DashboardEvent.RefreshData)
+                }
+            }
+        }
     }
 
     fun handleEvent(event: DashboardEvent) {
