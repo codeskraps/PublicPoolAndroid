@@ -22,6 +22,7 @@
 
 # Rules from missing_rules.txt
 -dontwarn javax.servlet.ServletContainerInitializer
+-dontwarn jakarta.servlet.ServletContainerInitializer
 
 # Keep rules for libraries
 # AnyChart
