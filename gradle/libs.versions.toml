@@ -1,29 +1,28 @@
 [versions]
-agp = "8.9.1"
-kotlin = "2.1.20"
+agp = "9.0.1"
+kotlin = "2.3.10"
 # --- Added Versions ---
-ksp = "2.1.20-1.0.32" # Updated KSP version for Kotlin 2.0.21
-navigationCompose = "2.8.9"
-ktor = "2.3.12" # Or latest stable
-koin = "3.5.6"
-koinCompose = "3.5.6" # Ensure compatibility if using separate compose version
+ksp = "2.3.2" # Updated KSP version for Kotlin 2.0.21
+navigationCompose = "2.9.7"
+ktor = "3.4.0" # Or latest stable
+koin = "4.1.1"
+koinCompose = "4.1.1" # Ensure compatibility if using separate compose version
 anychart = "1.1.5" # Check for latest version
-datastore = "1.1.4"
-coil = "2.6.0"
-logback = "1.3.14" # Or latest stable for Ktor logging
-kotlinxSerializationJson = "1.6.3" # Ensure compatibility
+datastore = "1.2.0"
+coil = "2.7.0"
+logback = "1.5.31" # Or latest stable for Ktor logging
+kotlinxSerializationJson = "1.10.0" # Ensure compatibility
 voyager = "1.1.0-beta03" # Add Voyager version
-webkit = "1.13.0" # WebView for Umami analytics
+webkit = "1.15.0" # WebView for Umami analytics
 # --- End Added Versions ---
-coreKtx = "1.15.0"
+coreKtx = "1.17.0"
 junit = "4.13.2"
-junitVersion = "1.2.1"
-espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.10.1"
-composeBom = "2025.03.01"
-composeCompiler = "1.5.11" # Explicitly define compiler version used in build.gradle
-coreSplashscreen = "1.0.1"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
+lifecycleRuntimeKtx = "2.10.0"
+activityCompose = "1.12.4"
+composeBom = "2026.02.00"
+coreSplashscreen = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +39,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-material-icons = { group = "androidx.compose.material", name = "material-icons-core" }
 # --- Added Libraries ---
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose"}
 # Ktor
@@ -72,7 +72,6 @@ androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "w
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 # --- Added Plugins ---
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

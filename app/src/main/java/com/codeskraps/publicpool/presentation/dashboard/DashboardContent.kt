@@ -69,6 +69,9 @@ import kotlinx.coroutines.flow.collectLatest
 import java.text.NumberFormat
 import java.util.Locale
 
+private const val HASH_RATE_SCALE_FORMAT =
+    "{scale:(1000)(1000)(1000)(1000)(1000)(1000)(1000)(1000)|( H/s)( KH/s)( MH/s)( GH/s)( TH/s)( PH/s)( EH/s)( ZH/s)( YH/s)}"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardContent(screenModel: DashboardScreenModel) {
@@ -403,7 +406,7 @@ fun HashRateChart(
             cartesian.xAxis(0).labels().padding(5.0, 5.0, 5.0, 5.0)
             cartesian.xAxis(0).labels().format("{%Value}{dateTimeFormat:HH:mm}")
             cartesian.xAxis(0).labels().fontColor(onSurfaceVariantColorHex) // Set X-axis label color
-            cartesian.yAxis(0).labels().format("{%Value}{scale:(1000)(1000)(1000)(1000)|( H/s)( KH/s)( MH/s)( GH/s)( TH/s)}")
+            cartesian.yAxis(0).labels().format("{%Value}$HASH_RATE_SCALE_FORMAT")
             cartesian.yAxis(0).labels().fontColor(onSurfaceVariantColorHex) // Set Y-axis label color
 
             // Grid lines (optional, set color if desired)
@@ -422,7 +425,7 @@ fun HashRateChart(
                 .anchor(Anchor.LEFT_CENTER)
                 .offsetX(5.0)
                 .offsetY(5.0)
-                .format("10m - {%x}{dateTimeFormat:dd MMM HH:mm}: {%Value}{scale:(1000)(1000)(1000)(1000)|( H/s)( KH/s)( MH/s)( GH/s)( TH/s)}")
+                .format("10m - {%x}{dateTimeFormat:dd MMM HH:mm}: {%Value}$HASH_RATE_SCALE_FORMAT")
 
             // Series 2: 2 Hour (Yellow/Gold)
             if (seriesData2Hour.isNotEmpty()) {
@@ -436,7 +439,7 @@ fun HashRateChart(
                     .anchor(Anchor.LEFT_CENTER)
                     .offsetX(5.0)
                     .offsetY(5.0)
-                    .format("2h - {%x}{dateTimeFormat:dd MMM HH:mm}: {%Value}{scale:(1000)(1000)(1000)(1000)|( H/s)( KH/s)( MH/s)( GH/s)( TH/s)}")
+                    .format("2h - {%x}{dateTimeFormat:dd MMM HH:mm}: {%Value}$HASH_RATE_SCALE_FORMAT")
             }
 
             // --- Final Chart Setup --- >
