@@ -9,7 +9,7 @@
     <!-- General -->
     <string name="error_unknown">未知错误</string>
     <string name="text_placeholder_dash">-</string>
-    <string name="currency_usd">美元</string>
+    <string name="currency_usd">USD</string>
     <string name="action_back">返回</string>
 
     <!-- Settings Screen -->
