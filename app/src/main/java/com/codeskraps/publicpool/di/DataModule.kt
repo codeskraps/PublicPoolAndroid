@@ -64,7 +64,7 @@ val dataModule = module {
     single { 
         UmamiConfig(
             scriptUrl = "https://umami.codeskraps.com/script.js",
-            websiteId = "b3e6309f-9724-48e5-a1c6-11757de3fe83",
+            websiteId = "cc7bf8cd-907a-4801-b3bb-847b484ea159",
             baseUrl = "https://umami.codeskraps.com"
         )
     }
