@@ -1,186 +1,131 @@
 package com.codeskraps.publicpool.data.remote
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.webkit.WebView
-import androidx.webkit.WebViewClientCompat
+import android.content.res.Resources
+import android.os.Build
+import android.util.DisplayMetrics
 import com.codeskraps.publicpool.di.AppReadinessState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.suspendCancellableCoroutine
+import io.ktor.client.HttpClient
+import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import java.util.Locale
 
 data class UmamiConfig(
-    val scriptUrl: String,
     val websiteId: String,
     val baseUrl: String
 )
 
-@SuppressLint("SetJavaScriptEnabled")
 class UmamiAnalyticsDataSource(
     private val context: Context,
     private val appReadinessState: AppReadinessState,
-    private val config: UmamiConfig
+    private val config: UmamiConfig,
+    private val client: HttpClient
 ) {
-    
-    private var isInitialized = false
-    
-    private val webView: WebView by lazy {
-        WebView(context).apply {
-            settings.javaScriptEnabled = true
-            webViewClient = UmamiWebViewClient()
-            loadUrl("about:blank")
-        }
+
+    private val sendUrl = "${config.baseUrl}/api/send"
+
+    private val screenResolution: String by lazy {
+        val metrics: DisplayMetrics = Resources.getSystem().displayMetrics
+        "${metrics.widthPixels}x${metrics.heightPixels}"
     }
-    
-    private val umamiScript = """
-        <script defer src="${config.scriptUrl}" data-website-id="${config.websiteId}"></script>
-    """.trimIndent()
-    
-    @OptIn(ExperimentalCoroutinesApi::class)
-    suspend fun initialize() = withContext(Dispatchers.Main) {
-        if (isInitialized) return@withContext
-        
-        webView.loadDataWithBaseURL(
-            config.baseUrl,
-            "<html><head>$umamiScript</head><body></body></html>",
-            "text/html",
-            "UTF-8",
-            null
-        )
-        
-        // Check if Umami is ready by evaluating JavaScript
-        var attempts = 0
-        val maxAttempts = 10 // Maximum number of attempts
-        
-        while (attempts < maxAttempts) {
-            try {
-                val isUmamiReady = suspendCancellableCoroutine { continuation ->
-                    webView.evaluateJavascript(
-                        """
-                        (function() {
-                            return typeof umami !== 'undefined';
-                        })();
-                        """.trimIndent()
-                    ) { result ->
-                        continuation.resumeWith(Result.success(result.toBooleanStrictOrNull() ?: false))
-                    }
-                }
-                
-                if (isUmamiReady) {
-                    isInitialized = true
-                    break
-                }
-            } catch (_: Exception) {
-                // Log error if needed
-            }
-            
-            attempts++
-            delay(200) // Short delay between checks
+
+    private val language: String by lazy {
+        Locale.getDefault().toLanguageTag()
+    }
+
+    private val userAgent: String by lazy {
+        val appVersion = try {
+            context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "unknown"
+        } catch (_: Exception) {
+            "unknown"
         }
-        
-        // Set app as ready regardless of Umami state
-        // This ensures the app doesn't hang if analytics fails
+        "PublicPool/$appVersion (Android ${Build.VERSION.RELEASE}; ${Build.MODEL})"
+    }
+
+    suspend fun initialize() {
+        // No setup needed for direct API calls — mark app as ready immediately
         appReadinessState.setReady()
     }
-    
-    suspend fun trackPageView(pageName: String) = withContext(Dispatchers.Main) {
-        if (!isInitialized) return@withContext
-        
-        webView.evaluateJavascript(
-            """
-            (function() {
-                if (typeof umami === 'undefined') {
-                    console.error('Umami is not defined');
-                    return false;
-                }
-                
-                try {
-                    // Format the page name as a proper URL path
-                    const path = '$pageName'.startsWith('/') ? '$pageName' : '/$pageName';
-                    // Create a title from the page name (capitalize first letter, replace dashes with spaces)
-                    const title = '$pageName'
-                        .replace(/-/g, ' ')
-                        .replace(/\\b\\w/g, l => l.toUpperCase());
-                    
-                    umami.track({ 
-                        url: path, 
-                        title: title,
-                        website: '${config.websiteId}'
-                    });
-                    console.log('Page view tracked:', path, 'with title:', title);
-                    return true;
-                } catch (e) {
-                    console.error('Error tracking page view:', e);
-                    return false;
-                }
-            })();
-            """,
-            null
-        )
+
+    suspend fun trackPageView(pageName: String) {
+        val path = if (pageName.startsWith("/")) pageName else "/$pageName"
+        val title = pageName
+            .replace("-", " ")
+            .replaceFirstChar { it.uppercase() }
+
+        val payload = buildMap {
+            put("website", JsonPrimitive(config.websiteId))
+            put("hostname", JsonPrimitive("app.publicpool"))
+            put("screen", JsonPrimitive(screenResolution))
+            put("language", JsonPrimitive(language))
+            put("title", JsonPrimitive(title))
+            put("url", JsonPrimitive(path))
+            put("referrer", JsonPrimitive(""))
+        }
+
+        sendEvent("event", JsonObject(payload))
     }
-    
-    suspend fun trackEvent(eventName: String, eventData: Map<String, String> = emptyMap()) = withContext(Dispatchers.Main) {
-        if (!isInitialized) return@withContext
-        
-        webView.evaluateJavascript(
-            """
-            (function() {
-                if (typeof umami === 'undefined') {
-                    console.error('Umami is not defined');
-                    return false;
-                }
-                
-                try {
-                    const data = ${eventData.entries.joinToString(",", "{", "}") { 
-                        "\"${it.key}\": \"${it.value}\"" 
-                    }};
-                    umami.track('$eventName', data, '${config.websiteId}');
-                    console.log('Event tracked:', '$eventName', data);
-                    return true;
-                } catch (e) {
-                    console.error('Error tracking event:', e);
-                    return false;
-                }
-            })();
-            """,
-            null
-        )
+
+    suspend fun trackEvent(eventName: String, eventData: Map<String, String> = emptyMap()) {
+        val payload = buildMap {
+            put("website", JsonPrimitive(config.websiteId))
+            put("hostname", JsonPrimitive("app.publicpool"))
+            put("screen", JsonPrimitive(screenResolution))
+            put("language", JsonPrimitive(language))
+            put("url", JsonPrimitive("/"))
+            put("referrer", JsonPrimitive(""))
+            put("name", JsonPrimitive(eventName))
+            if (eventData.isNotEmpty()) {
+                put("data", JsonObject(eventData.mapValues { JsonPrimitive(it.value) }))
+            }
+        }
+
+        sendEvent("event", JsonObject(payload))
     }
-    
-    suspend fun identifyUser(walletAddress: String?) = withContext(Dispatchers.Main) {
-        if (!isInitialized || walletAddress.isNullOrBlank()) return@withContext
-        
-        // Anonymize the address by using only the first and last 4 characters
-        val addressLength = walletAddress.length
-        val anonymizedId = if (addressLength > 8) {
+
+    suspend fun identifyUser(walletAddress: String?) {
+        if (walletAddress.isNullOrBlank()) return
+
+        val anonymizedId = if (walletAddress.length > 8) {
             "${walletAddress.take(4)}...${walletAddress.takeLast(4)}"
         } else {
             walletAddress
         }
-        
-        webView.evaluateJavascript(
-            """
-            (function() {
-                if (typeof umami === 'undefined') {
-                    console.error('Umami is not defined');
-                    return false;
-                }
-                
-                try {
-                    umami.identify({ wallet_id: '$anonymizedId' }, '${config.websiteId}');
-                    console.log('User identified:', '$anonymizedId');
-                    return true;
-                } catch (e) {
-                    console.error('Error identifying user:', e);
-                    return false;
-                }
-            })();
-            """,
-            null
-        )
+
+        val payload = buildMap {
+            put("website", JsonPrimitive(config.websiteId))
+            put("hostname", JsonPrimitive("app.publicpool"))
+            put("screen", JsonPrimitive(screenResolution))
+            put("language", JsonPrimitive(language))
+            put("url", JsonPrimitive("/"))
+            put("referrer", JsonPrimitive(""))
+            put("data", JsonObject(mapOf("wallet_id" to JsonPrimitive(anonymizedId))))
+        }
+
+        sendEvent("identify", JsonObject(payload))
     }
-    
-    private class UmamiWebViewClient : WebViewClientCompat()
-} 
+
+    private suspend fun sendEvent(type: String, payload: JsonObject) {
+        try {
+            val body = JsonObject(
+                mapOf(
+                    "type" to JsonPrimitive(type),
+                    "payload" to payload
+                )
+            )
+            client.post(sendUrl) {
+                contentType(ContentType.Application.Json)
+                header("User-Agent", userAgent)
+                setBody(body.toString())
+            }
+        } catch (_: Exception) {
+            // Silently ignore analytics failures
+        }
+    }
+}

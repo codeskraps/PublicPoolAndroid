@@ -61,15 +61,14 @@ val dataModule = module {
     singleOf(::PublicPoolRepositoryImpl) bind PublicPoolRepository::class
 
     // Analytics Configuration
-    single { 
+    single {
         UmamiConfig(
-            scriptUrl = "https://umami.codeskraps.com/script.js",
             websiteId = "cc7bf8cd-907a-4801-b3bb-847b484ea159",
             baseUrl = "https://umami.codeskraps.com"
         )
     }
 
     // Analytics Implementation
-    singleOf(::UmamiAnalyticsDataSource)
+    single { UmamiAnalyticsDataSource(get(), get(), get(), get()) }
     singleOf(::AnalyticsRepositoryImpl) bind AnalyticsRepository::class
 } 
