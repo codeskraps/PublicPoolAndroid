@@ -7,6 +7,7 @@ import com.codeskraps.publicpool.domain.repository.AnalyticsRepository
 import com.codeskraps.publicpool.domain.repository.PublicPoolRepository
 import com.codeskraps.umamilib.Umami
 import com.codeskraps.umamilib.UmamiConfig
+import com.codeskraps.umamilib.create
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
