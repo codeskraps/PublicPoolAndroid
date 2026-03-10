@@ -1,8 +1,3 @@
 package com.codeskraps.publicpool.domain.repository
 
-interface AnalyticsRepository {
-    suspend fun initialize()
-    suspend fun trackPageView(pageName: String)
-    suspend fun trackEvent(eventName: String, eventData: Map<String, String> = emptyMap())
-    suspend fun identifyUser(walletAddress: String?)
-} 
+typealias AnalyticsRepository = com.codeskraps.umamilib.domain.UmamiAnalytics

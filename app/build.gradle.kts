@@ -61,6 +61,9 @@ android {
 
 dependencies {
 
+    // Analytics
+    implementation(libs.umamilib)
+
     // AndroidX Core & Lifecycle
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)

@@ -2,12 +2,11 @@ package com.codeskraps.publicpool.di
 
 import com.codeskraps.publicpool.data.remote.KtorApiService
 import com.codeskraps.publicpool.data.remote.KtorApiServiceImpl
-import com.codeskraps.publicpool.data.remote.UmamiAnalyticsDataSource
-import com.codeskraps.publicpool.data.remote.UmamiConfig
-import com.codeskraps.publicpool.data.repository.AnalyticsRepositoryImpl
 import com.codeskraps.publicpool.data.repository.PublicPoolRepositoryImpl
 import com.codeskraps.publicpool.domain.repository.AnalyticsRepository
 import com.codeskraps.publicpool.domain.repository.PublicPoolRepository
+import com.codeskraps.umamilib.Umami
+import com.codeskraps.umamilib.UmamiConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -60,15 +59,16 @@ val dataModule = module {
     // Repository Implementation
     singleOf(::PublicPoolRepositoryImpl) bind PublicPoolRepository::class
 
-    // Analytics Configuration
-    single {
-        UmamiConfig(
-            websiteId = "cc7bf8cd-907a-4801-b3bb-847b484ea159",
-            baseUrl = "https://umami.codeskraps.com"
+    // Analytics
+    single<AnalyticsRepository> {
+        Umami.create(
+            application = get(),
+            config = UmamiConfig(
+                websiteId = "cc7bf8cd-907a-4801-b3bb-847b484ea159",
+                baseUrl = "https://umami.codeskraps.com",
+                hostname = "app.publicpool",
+                appName = "PublicPool"
+            )
         )
     }
-
-    // Analytics Implementation
-    single { UmamiAnalyticsDataSource(get(), get(), get(), get()) }
-    singleOf(::AnalyticsRepositoryImpl) bind AnalyticsRepository::class
 } 
